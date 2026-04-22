@@ -33,7 +33,7 @@
 body {
     background-color: var(--DARKPEACHPURPLE);
 }
-.logo, h1, h2 {
+.logo{
     font-family: 'Playfair Display', serif;
     font-weight: 700;
     letter-spacing: 5px;
