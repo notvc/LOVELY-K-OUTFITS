@@ -104,17 +104,25 @@ const prevBtn = document.querySelector('.prev');
 function updateCarousel() {
     const cards = document.querySelectorAll('.testimonial-card');
     if (cards.length > 0) {
-        const width = cards[0].offsetWidth + 20;
+        const width = cards[0].offsetWidth + 20; // Each card width + gap
         track.style.transform = `translateX(-${index * width}px)`;
         
+        // Calculate how many cards are actually visible
+        const containerWidth = document.querySelector('.carousel-container').offsetWidth;
+        const visibleCards = Math.round(containerWidth / width);
+        
         if(prevBtn) prevBtn.disabled = (index === 0);
-        if(nextBtn) nextBtn.disabled = (index >= testimonials.length - 3);
+        if(nextBtn) nextBtn.disabled = (index >= cards.length - visibleCards);
     }
 }
 
 if (nextBtn && prevBtn) {
     nextBtn.addEventListener('click', () => {
-        if (index < testimonials.length - 3) {
+        const cards = document.querySelectorAll('.testimonial-card');
+        const containerWidth = document.querySelector('.carousel-container').offsetWidth;
+        const width = cards[0].offsetWidth + 20;
+        const visibleCards = Math.round(containerWidth / width);
+        if (index < cards.length - visibleCards) {
             index++;
             updateCarousel();
         }

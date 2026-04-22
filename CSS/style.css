@@ -35,6 +35,7 @@
     --text-main: #FDA481; /* PEACH */
     --card-bg: #2D1B2D;
     --DIMPEACH:#54162B;
+    --PEACH:#54162B;
 }
 
 * {
@@ -152,10 +153,11 @@ body {
 .search-container {
     position: relative;
     display: flex;
+    justify-content: center;
     align-items: center;
-    background: var(--DIMPEACH);
-    padding: 8px;
-    border-radius: 50px;
+    background: var(--nav-bg);
+    padding: 7px;
+    border-radius: 50%;
     transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
     width: 40px; /* Initial circle size */
     overflow: hidden;
@@ -276,6 +278,9 @@ body {
 @media (max-width: 1024px) {
     .category-grid {
         grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+    }
+    .hair {
+        grid-column: span 2;
     }
 }
 
@@ -431,8 +436,11 @@ body {
 [data-theme="dark"] .testimonial-card p {
     color: var(--TEXTCOLOR);
 }
-.testimonial-card p { font-style: italic; color: var(--DARKRED); }
+.testimonial-card p { font-style: italic; color: var(--text-main);}
 .testimonial-card h4 { margin-top: 20px; color: var(--RED); letter-spacing: 2px; }
+[data-theme="dark"] .testimonial-card p {
+    color: #FDA481; /* or white, or whatever light color fits your design */
+}
 
 /* Carousel Navigation Container */
 .carousel-nav {
@@ -606,8 +614,6 @@ body {
 /* Remove the old .fa-brands { height: 100px; width: 100px; } */
 
 .social-icons {
-    display: flex;
-    gap: 15px;
     margin-top: 10px;
 }
 
@@ -659,12 +665,16 @@ body {
    ========================================================================== */
 
 /* --- LARGE TABLETS (Max 1200px) --- */
-@media (max-width: 1200px) {
+@media (max-width: 1024px) {
     .product-grid { 
         grid-template-columns: repeat(3, 1fr); 
     }
     .journal-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .social-icons {
+        justify-content: flex-start;
     }
 }
 
@@ -676,6 +686,42 @@ body {
     .footer-content { 
         grid-template-columns: 1fr 1fr; 
     }
+
+    /* Navbar & Mobile Menu */
+    .navbar {
+        flex-direction: row; /* Keep logo and hamburger on same line */
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .menu-toggle {
+        display: block;
+        z-index: 1001;
+    }
+
+    .nav-links {
+        position: fixed;
+        left: -100%;
+        top: 0; /* Cover full screen */
+        flex-direction: column;
+        justify-content: center;
+        background-color: var(--nav-bg);
+        width: 100%;
+        height: 100vh;
+        text-align: center;
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+        z-index: 1000;
+    }
+
+    .nav-links.active {
+        left: 0;
+    }
+
+    .nav-links li {
+        margin: 20px 0;
+    }
+
 }
 
 /* --- MOBILE DEVICES (Max 768px) --- */
@@ -686,6 +732,11 @@ body {
     }
     .product-header h2 { 
         font-size: 1.8rem; 
+    }
+
+    /* Testimonial Carousel - Show 2 cards on tablets */
+    .testimonial-card {
+        min-width: calc(50% - 10px);
     }
 
     /* Navbar & Mobile Menu */
@@ -754,5 +805,11 @@ body {
     }
     .product-grid {
         grid-template-columns: 1fr; /* Single column for very small screens */
+    }
+    .testimonial-card{
+        min-width: calc(100% - 14px);
+    }
+    .hair {
+        grid-column: span 1; /* No spanning on small screens */
     }
 }
