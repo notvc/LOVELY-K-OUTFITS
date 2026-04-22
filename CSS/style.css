@@ -23,6 +23,7 @@
     font-style: normal;
 }
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -30,9 +31,11 @@
     font-family: 'Montserrat', sans-serif;
     -webkit-font-smoothing: antialiased;
 }
+
 body {
     background-color: var(--DARKPEACHPURPLE);
 }
+
 .logo{
     font-family: 'Playfair Display', serif;
     font-weight: 700;
@@ -40,6 +43,7 @@ body {
     text-transform: uppercase;
     font-size: 50px;
 }
+
 /* Navbar Container */
 .navbar {
     display: flex;
@@ -120,7 +124,7 @@ body {
     background: none;
     border: none;
     outline: none;
-    color: white;
+    color: var(--DARKRED);
     width: 0;
     padding: 0;
     transition: width 1s ease;
@@ -151,6 +155,392 @@ body {
     margin: 5px auto;
     transition: all 0.3s ease-in-out;
     background: var(--PEACH);
+}
+
+/* Section Layout */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 in a row */
+    gap: 15px;
+    padding: 40px 5%;
+    background-color: var(--DARKPEACHPURPLE);
+}
+
+/* Individual Grid Item */
+.grid-item {
+    position: relative;
+    height: 450px;
+    background-size: cover;
+    background-position: center;
+    text-decoration: none;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    border: 2px solid transparent; /* invisible border until hover */
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), border 0.5s ease;
+    
+    /* Custom Cursor */
+    cursor: crosshair; /* Changes the cursor to a fashion-style crosshair */
+}
+
+/* Background images (Add your own image paths here) */
+.men { background-image: url('../PICS/men.jpg'); }
+.women { background-image: url('../PICS/women.jpg'); }
+.accessories { background-image: url('../PICS/acc.jpg'); }
+.shoes { background-image: url('../PICS/shoes.jpg'); }
+.hair { background-image: url('../PICS/hair.jpg'); }
+
+/* Border/Outline Animation on Hover */
+.grid-item:hover {
+    transform: scale(1.03); /* Subtle zoom in */
+    border: 2px solid var(--PEACH); /* Animates the border color */
+    box-shadow: 0 0 20px rgba(253, 164, 129, 0.4);
+    z-index: 10;
+}
+
+/* The dark overlay text feel */
+.overlay {
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(transparent, rgba(25, 0, 25, 0.8));
+    transition: background 0.5s ease;
+}
+
+.grid-item:hover .overlay {
+    background: linear-gradient(transparent, var(--DARKRED));
+}
+
+.overlay h2 {
+    color: var(--LIGHTPEACH);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    text-align: center;
+    transition: transform 0.5s ease;
+}
+
+.grid-item:hover h2 {
+    transform: translateY(-10px); /* Text floats up on hover */
+    color: var(--PEACH);
+}
+
+/* Responsive: 5 columns doesn't fit on phones! */
+@media (max-width: 1024px) {
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+    }
+}
+
+@media (max-width: 600px) {
+    .category-grid {
+        grid-template-columns: 1fr; /* 1 column for phones */
+    }
+    .grid-item {
+        height: 300px;
+    }
+}
+
+/* Product Header */
+.product-header {
+    text-align: center;
+    padding: 60px 0 30px;
+    background-color: var(--DARKPEACHPURPLE);
+}
+
+.product-header h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--PEACH);
+    font-size: 2.5rem;
+    letter-spacing: 4px;
+}
+
+.product-header h3 {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--LIGHTPEACH);
+    font-weight: 300;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+/* Grid Logic: 5 columns x 6 rows */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(6, auto);
+    gap: 25px;
+    padding: 20px 5% 80px;
+    background-color: var(--DARKPEACHPURPLE);
+}
+
+/* Product Card Styling */
+.product-card {
+    background-color: var(--LIGHTPEACH);
+    padding: 10px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    cursor: pointer;
+}
+
+.product-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3/4; /* Keeps all product photos uniform */
+    overflow: hidden;
+    background-color: var(--DIMPEACH);
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: var(--RED);
+    color: white;
+    padding: 5px 12px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Info Section */
+.product-info {
+    padding: 15px 5px;
+    text-align: center;
+}
+
+.product-info h4 {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--DARKRED);
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.product-info .price {
+    font-weight: 600;
+    color: var(--DARKPEACHPURPLE);
+}
+
+/* Hover Effects */
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+
+.product-card:hover img {
+    transform: scale(1.1);
+}
+
+/* Journal Section Styling */
+.journal-section {
+    padding: 80px 5%;
+    background-color: var(--LIGHTPEACH); /* Light background to separate from dark product grid */
+}
+
+.journal-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.journal-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: var(--DARKRED);
+    letter-spacing: 5px;
+}
+
+.journal-header p {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--DARKPEACHPURPLE);
+    font-weight: 400;
+    margin-top: 10px;
+}
+
+/* Grid Layout */
+.journal-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+/* Featured Article Logic */
+.journal-card.featured {
+    grid-column: span 2; /* Takes 2/3 of the row */
+    display: flex;
+    align-items: center;
+}
+
+.journal-card {
+    background: white;
+    overflow: flex;
+    flex-direction: column; /* Stack image over text */
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transition: transform 0.4s ease;
+    border-radius: 4px;
+}
+
+.journal-img-wrapper {
+    overflow: hidden;
+    width: 100%;
+    height: 250px;
+}
+
+.featured .journal-img-wrapper {
+    height: 100%;
+    min-height: 400px;
+}
+
+.journal-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s ease;
+}
+
+.journal-content {
+    padding: 30px;
+}
+
+.journal-content .category {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--PEACH);
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.journal-content h3 {
+    font-family: 'Playfair Display', serif;
+    color: var(--DARKRED);
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.journal-content p {
+    font-size: 0.9rem;
+    color: var(--DARKPEACHPURPLE);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.read-more {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--DARKRED);
+    border-bottom: 2px solid var(--PEACH);
+    padding-bottom: 4px;
+    transition: all 0.3s ease;
+}
+
+/* Interaction Effects */
+.journal-card:hover {
+    transform: translateY(-5px);
+}
+
+.journal-card:hover img {
+    transform: scale(1.05);
+}
+
+.read-more:hover {
+    color: var(--PEACH);
+    border-bottom-color: var(--DARKRED);
+}
+
+.journal-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(133, 79, 108, 0.2); /* Using your DARKPEACHPURPLE for the shadow */
+}
+
+/* Footer Styling */
+.main-footer {
+    background-color: var(--DARKRED);
+    color: var(--LIGHTPEACH);
+    padding: 60px 5% 20px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 50px;
+    margin-bottom: 40px;
+}
+
+.footer-brand h2 {
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+}
+
+.footer-links h4, .footer-socials h4 {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    color: var(--PEACH);
+}
+
+.footer-links a, .social-icons a {
+    display: block;
+    text-decoration: none;
+    color: var(--LIGHTPEACH);
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.footer-links a:hover { color: var(--PEACH); }
+
+.footer-bottom {
+    border-top: 1px solid rgba(251, 228, 216, 0.1);
+    padding-top: 20px;
+    text-align: center;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+}
+
+/* Final Combined Responsive Logic */
+@media (max-width: 1024px) {
+    .journal-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-content { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+    .logo h3 { font-size: 24px; } /* Fixed giant mobile logo */
+    .journal-grid { grid-template-columns: 1fr; }
+    .footer-content { grid-template-columns: 1fr; text-align: center; }
+    .navbar ul { display: none; } /* Standard hidden nav for mobile toggle */
+    .navbar ul.active { display: flex; } 
+}
+
+/* Responsive Journal */
+@media (max-width: 1200px) {
+    .journal-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2x2 grid on tablets */
+    }
+}
+
+@media (max-width: 650px) {
+    .journal-grid {
+        grid-template-columns: 1fr; /* Stacked on phones */
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+    .product-grid { grid-template-columns: repeat(3, 1fr); } /* 3 columns for tablets */
+}
+
+@media (max-width: 768px) {
+    .product-grid { grid-template-columns: repeat(2, 1fr); } /* 2 columns for mobile */
+    .product-header h2 { font-size: 1.8rem; }
 }
 
 /* Responsive Design */
