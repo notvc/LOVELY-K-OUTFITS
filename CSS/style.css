@@ -1,0 +1,203 @@
+:root{
+    --DARKPEACHPURPLE:#854F6C;
+    --LIGHTPEACH:#FBE4D8;
+    --DIMPEACH:#DFB6B2;
+    --PEACH:#FDA481;
+    --RED:#B41B2D;
+    --DARKRED:#54162B;
+    --TEXTCOLOR:#190019;
+
+}
+/* Repeat this block for every weight (Bold, Regular, etc.) you want to use */
+@font-face {
+    font-family: 'BoutiqueFont'; /* This is the name you'll use in your CSS */
+    src:  url('../fonts/abode-webfont/Abode-Light.woff') format('woff');/* Best for web */
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'BoutiqueFont';
+    src: url('../fonts/abode-webfont/abode.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+body {
+    background-color: var(--DARKPEACHPURPLE);
+}
+.logo, h1, h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    font-size: 50px;
+}
+/* Navbar Container */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background-color: var(--LIGHTPEACH);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Navigation Links */
+.navbar ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.navbar ul li {
+    display: flex;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: var(--DARKRED);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    position: relative;
+    padding: 5px 0;
+    transition: color 1s ease;
+}
+
+/* Hover Animation: Underline drawing out */
+.navbar a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--PEACH);
+    transition: width 0.6s ease;
+}
+
+.navbar a:hover {
+    color: var(--PEACH);
+}
+
+.navbar a:hover::after {
+    width: 100%;
+}
+
+/* Expanding Search Bar */
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--DIMPEACH);
+    padding: 8px;
+    border-radius: 50px;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 40px; /* Initial circle size */
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.search-container:hover, 
+.search-container:focus-within {
+    width: 250px; /* Expanded size */
+    padding-left: 15px;
+}
+
+.search-input {
+    background: none;
+    border: none;
+    outline: none;
+    color: white;
+    width: 0;
+    padding: 0;
+    transition: width 1s ease;
+}
+
+.search-container:hover .search-input,
+.search-container:focus-within .search-input {
+    width: 100%;
+    margin-right: 10px;
+}
+
+.search-icon {
+    color: var(--PEACH);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* --- Desktop Styles --- */
+.menu-toggle {
+    display: none; /* Hidden on desktop */
+    cursor: pointer;
+}
+
+.bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    transition: all 0.3s ease-in-out;
+    background: var(--PEACH);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .navbar ul li {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .search-container:hover {
+        width: 100%; /* Full width on mobile */
+    }
+    .menu-toggle {
+        display: block;
+        z-index: 1001;
+    }
+
+    .nav-links {
+        position: fixed;
+        left: -100%; /* Hide off-screen */
+        top: 70px;
+        flex-direction: column;
+        background-color: var(--LIGHTPEACH);
+        width: 100%;
+        height: 100vh;
+        text-align: center;
+        transition: 0.3s;
+        box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+        padding-top: 50px;
+    }
+
+    .nav-links.active {
+        left: 0; /* Slide in */
+    }
+
+    .nav-links li {
+        margin: 25px 0;
+    }
+
+    /* Animate Hamburger to 'X' when active */
+    .menu-toggle.is-active .bar:nth-child(2) { opacity: 0; }
+    .menu-toggle.is-active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .menu-toggle.is-active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+}
