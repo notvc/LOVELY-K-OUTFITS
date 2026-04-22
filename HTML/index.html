@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="icon" type="image/png" href="/home/onoshi/Desktop/LOVELY K OUTFITS/PICS/icons8-shop-50.png">
+    <title>LOVELY K OUTFITS | HAIR</title>
     <link rel="stylesheet" href="../CSS/style.css">
 </head>
 <body>
@@ -27,6 +28,10 @@
                 <div class="search-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 </div>
+            </div>
+            <div class="theme-control">
+                <button id="theme-toggle" class="theme-btn">
+                <span id="theme-icon">☪</span></button>
             </div>
         </div>
     </nav>
@@ -64,46 +69,34 @@
     </div>
     <div class="product-grid" id="product-container"></div>
 </section>
-<section class="journal-section">
-    <div class="journal-header">
-        <h2>THE JOURNAL</h2>
-        <p>Style tips, hair care, and the latest trends from Lovely K.</p>
+<section class="about-section">
+    <div class="about-container">
+        <h1>OUR STORY</h1>
+        <p>At LOVELY K OUTFITS & HAIR, we believe that elegance is a language. Founded in 2026, our boutique serves as a sanctuary for those who seek high-fashion outfits and premium hair care under one roof. We blend modern UI/UX aesthetics with timeless style to bring you a curated collection that empowers your unique identity.</p>
     </div>
-
-    <div class="journal-grid">
-        <article class="journal-card featured">
-            <div class="journal-img-wrapper">
-                <img src="PICS/article1.jpg" alt="Style Guide">
+</section>
+<section class="testimonial-section">
+    <div class="section-header">
+        <h2>WHAT OUR CLIENTS SAY</h2>
+    </div>
+    <div class="carousel-container">
+        <div class="carousel-track" id="testimonial-track">
             </div>
-            <div class="journal-content">
-                <span class="category">STYLE GUIDE</span>
-                <h3>How to Style Silk for the Modern Woman</h3>
-                <p>Discover the secrets to transitioning your favorite silk pieces from office hours to evening glamour...</p>
-                <a href="#" class="read-more">READ STORY</a>
-            </div>
-        </article>
-
-        <article class="journal-card">
-            <div class="journal-img-wrapper">
-                <img src="PICS/article2.jpg" alt="Hair Care">
-            </div>
-            <div class="journal-content">
-                <span class="category">HAIR CARE</span>
-                <h3>Maintaining Your Crown: 5 Tips for Healthy Curls</h3>
-                <a href="#" class="read-more">READ STORY</a>
-            </div>
-        </article>
-
-        <article class="journal-card">
-            <div class="journal-img-wrapper">
-                <img src="PICS/article3.jpg" alt="Accessories">
-            </div>
-            <div class="journal-content">
-                <span class="category">TRENDING</span>
-                <h3>Gold vs. Silver: The 2026 Accessory Debate</h3>
-                <a href="#" class="read-more">READ STORY</a>
-            </div>
-        </article>
+        <div class="carousel-nav">
+            <button class="nav-btn prev">&#10094;</button>
+            <button class="nav-btn next">&#10095;</button>
+        </div>
+    </div>
+</section>
+<section class="contact-section">
+    <div class="contact-container">
+        <h2>GET IN TOUCH</h2>
+        <form action="https://formspree.io/f/your-id" method="POST" id="contact-form">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="How can we help you?" rows="5" required></textarea>
+            <button type="submit" class="submit-btn">SEND MESSAGE</button>
+        </form>
     </div>
 </section>
 <footer class="main-footer">
@@ -124,9 +117,18 @@
                 <a href="#">IG</a> <a href="#">FB</a> <a href="#">TW</a>
             </div>
         </div>
+        <div class="footer-map">
+            <h4>VISIT OUR BOUTIQUE</h4>
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3939.82343204!2d7.48!3d9.06!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x104e0baf7dc!2sAbuja!5e0!3m2!1sen!2sng!4v1622500000000!5m2!1sen!2sng" 
+                    width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy">
+                </iframe>
+            </div>
+        </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; 2026 LOVELY K OUTFITS & HAIR. All Rights Reserved.</p>
+        <p>&copy; 2026 LOVELY K OUTFITS & HAIR. All Rights Reserved. | Made by <a href="#" class="themakerid">NOTVC</a></p>
     </div>
 </footer>
 <script src="../JS/script.js"></script>

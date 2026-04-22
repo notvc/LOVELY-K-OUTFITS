@@ -1,11 +1,15 @@
 :root{
-    --DARKPEACHPURPLE:#854F6C;
-    --LIGHTPEACH:#FBE4D8;
+    --bg-color:#854F6C;
+    --nav-bg:#FBE4D8;
     --DIMPEACH:#DFB6B2;
     --PEACH:#FDA481;
     --RED:#B41B2D;
-    --DARKRED:#54162B;
+    --text-main:#54162B;
     --TEXTCOLOR:#190019;
+    --bg-color: #854F6C; /* DARKPEACHPURPLE */
+    --nav-bg: #FBE4D8;   /* LIGHTPEACH */
+    --text-main: #54162B; /* DARKRED */
+    --card-bg: #FBE4D8;
 
 }
 /* Repeat this block for every weight (Bold, Regular, etc.) you want to use */
@@ -24,6 +28,15 @@
 }
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
 
+/* Dark Mode Overrides */
+[data-theme="dark"] {
+    --bg-color: #190019;
+    --nav-bg: #2D1B2D;
+    --text-main: #FDA481; /* PEACH */
+    --card-bg: #2D1B2D;
+    --DIMPEACH:#54162B;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -33,7 +46,9 @@
 }
 
 body {
-    background-color: var(--DARKPEACHPURPLE);
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .logo{
@@ -50,7 +65,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 5%;
-    background-color: var(--LIGHTPEACH);
+    background-color: var(--nav-bg);
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     position: sticky;
     top: 0;
@@ -71,7 +86,7 @@ body {
 
 .navbar a {
     text-decoration: none;
-    color: var(--DARKRED);
+    color: var(--text-main);
     font-size: 0.85rem;
     font-weight: 600;
     letter-spacing: 1.5px;
@@ -100,6 +115,39 @@ body {
     width: 100%;
 }
 
+/* theme-btn styling */
+.theme-btn {
+    background: transparent;
+    border: 1.5px solid var(--DARKRED); /* Using your color variables */
+    color: var(--DARKRED);
+    font-size: 1.2rem;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 50%; /* Circular button */
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+#theme-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+    /* The color is now controlled by the JavaScript applyThemeColors function */
+    transition: color 0.3s ease; 
+}
+.theme-btn:hover {
+    transform: scale(1.1);
+    background-color: rgba(253, 164, 129, 0.1);
+}
+
+/* Ensure the button colors adapt when the theme changes */
+[data-theme="dark"] .theme-btn {
+    border-color: var(--PEACH);
+    color: var(--PEACH);
+}
+
 /* Expanding Search Bar */
 .search-container {
     position: relative;
@@ -124,7 +172,7 @@ body {
     background: none;
     border: none;
     outline: none;
-    color: var(--DARKRED);
+    color: var(--text-main);
     width: 0;
     padding: 0;
     transition: width 1s ease;
@@ -137,7 +185,7 @@ body {
 }
 
 .search-icon {
-    color: var(--PEACH);
+    color: var(--text-main);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -163,7 +211,7 @@ body {
     grid-template-columns: repeat(5, 1fr); /* 5 in a row */
     gap: 15px;
     padding: 40px 5%;
-    background-color: var(--DARKPEACHPURPLE);
+    background-color: var(--bg-color);
 }
 
 /* Individual Grid Item */
@@ -207,11 +255,11 @@ body {
 }
 
 .grid-item:hover .overlay {
-    background: linear-gradient(transparent, var(--DARKRED));
+    background: linear-gradient(transparent, var(--text-main));
 }
 
 .overlay h2 {
-    color: var(--LIGHTPEACH);
+    color: var(--nav-bg);
     font-family: 'Playfair Display', serif;
     font-size: 1.2rem;
     letter-spacing: 3px;
@@ -244,7 +292,7 @@ body {
 .product-header {
     text-align: center;
     padding: 60px 0 30px;
-    background-color: var(--DARKPEACHPURPLE);
+    background-color: var(--bg-color);
 }
 
 .product-header h2 {
@@ -256,7 +304,7 @@ body {
 
 .product-header h3 {
     font-family: 'Montserrat', sans-serif;
-    color: var(--LIGHTPEACH);
+    color: var(--nav-bg);
     font-weight: 300;
     text-transform: uppercase;
     font-size: 0.9rem;
@@ -270,12 +318,12 @@ body {
     grid-template-rows: repeat(6, auto);
     gap: 25px;
     padding: 20px 5% 80px;
-    background-color: var(--DARKPEACHPURPLE);
+    background-color: var(--bg-color);
 }
 
 /* Product Card Styling */
 .product-card {
-    background-color: var(--LIGHTPEACH);
+    background-color: var(--nav-bg);
     padding: 10px;
     transition: transform 0.4s ease, box-shadow 0.4s ease;
     cursor: pointer;
@@ -316,14 +364,14 @@ body {
 
 .product-info h4 {
     font-family: 'Montserrat', sans-serif;
-    color: var(--DARKRED);
+    color: var(--text-main);
     font-size: 0.9rem;
     margin-bottom: 5px;
 }
 
 .product-info .price {
     font-weight: 600;
-    color: var(--DARKPEACHPURPLE);
+    color: var(--bg-color);
 }
 
 /* Hover Effects */
@@ -336,134 +384,191 @@ body {
     transform: scale(1.1);
 }
 
-/* Journal Section Styling */
-.journal-section {
-    padding: 80px 5%;
-    background-color: var(--LIGHTPEACH); /* Light background to separate from dark product grid */
-}
-
-.journal-header {
+/* About Us */
+.about-section {
+    padding: 100px 10%;
+    background-color: var(--LIGHTPEACH);
     text-align: center;
-    margin-bottom: 50px;
 }
-
-.journal-header h2 {
+.about-container h1 {
     font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
     color: var(--DARKRED);
+    font-size: 3rem;
+    margin-bottom: 20px;
     letter-spacing: 5px;
 }
-
-.journal-header p {
-    font-family: 'Montserrat', sans-serif;
+.about-container p {
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.8;
     color: var(--DARKPEACHPURPLE);
-    font-weight: 400;
+}
+
+/* Testimonial Carousel */
+.testimonial-section {
+    padding: 80px 5%;
+    background-color: var(--DARKPEACHPURPLE);
+    overflow: hidden;
+}
+.carousel-container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    gap: 20px;
+}
+.testimonial-card {
+    min-width: calc(33.333% - 14px); /* 3 grid layout */
+    background: var(--LIGHTPEACH);
+    padding: 40px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.testimonial-card p { font-style: italic; color: var(--DARKRED); }
+.testimonial-card h4 { margin-top: 20px; color: var(--RED); letter-spacing: 2px; }
+
+/* Carousel Navigation Container */
+.carousel-nav {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+/* Button Base Styling */
+.nav-btn {
+    background-color: transparent;
+    color: var(--PEACH);
+    border: 2px solid var(--PEACH);
+    padding: 12px 30px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover Effect: Fill Background */
+.nav-btn:hover {
+    background-color: var(--PEACH);
+    color: var(--DARKRED);
+    box-shadow: 0 0 15px rgba(253, 164, 129, 0.4);
+    transform: translateY(-3px);
+}
+
+/* Active State: Slight Scale Down */
+.nav-btn:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+/* Optional: Disabled State (when you reach the end of the carousel) */
+.nav-btn:disabled {
+    border-color: var(--DIMPEACH);
+    color: var(--DIMPEACH);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* --- CONTACT SECTION STYLING --- */
+.contact-section {
+    padding: 100px 10%;
+    background-color: var(--DIMPEACH); /* The main background color for the section */
+    display: flex;
+    justify-content: center;
+}
+
+.contact-container {
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+}
+
+.contact-container h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--DARKRED);
+    font-size: 2.5rem;
+    letter-spacing: 4px;
+    margin-bottom: 40px;
+}
+
+#contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Input & Textarea Styling */
+#contact-form input, 
+#contact-form textarea {
+    width: 100%;
+    padding: 18px;
+    /* Matches the div background exactly */
+    background-color: var(--DIMPEACH); 
+    /* Defined by a subtle border instead of a background change */
+    border: 1px solid var(--bg-color); 
+    border-radius: 4px;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--TEXTCOLOR);
+    font-size: 0.9rem;
+    transition: all 0.4s ease;
+}
+
+/* Placeholder color for contrast */
+#contact-form input::placeholder,
+#contact-form textarea::placeholder {
+    color: var(--DARKPEACHPURPLE);
+    opacity: 0.7;
+}
+
+/* Hover & Focus Effects */
+#contact-form input:hover,
+#contact-form textarea:hover {
+    border-color: var(--PEACH);
+}
+
+#contact-form input:focus, 
+#contact-form textarea:focus {
+    outline: none;
+    border-color: var(--PEACH);
+    background-color: var(--DIMPEACH); /* Keeps it the same on focus */
+    box-shadow: 0 0 10px rgba(253, 164, 129, 0.2);
+}
+
+/* Submit Button styling */
+.submit-btn {
+    background-color: var(--DARKRED);
+    color: var(--LIGHTPEACH);
+    padding: 20px;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.4s ease;
     margin-top: 10px;
 }
 
-/* Grid Layout */
-.journal-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 25px;
-}
-
-/* Featured Article Logic */
-.journal-card.featured {
-    grid-column: span 2; /* Takes 2/3 of the row */
-    display: flex;
-    align-items: center;
-}
-
-.journal-card {
-    background: white;
-    overflow: flex;
-    flex-direction: column; /* Stack image over text */
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    transition: transform 0.4s ease;
-    border-radius: 4px;
-}
-
-.journal-img-wrapper {
-    overflow: hidden;
-    width: 100%;
-    height: 250px;
-}
-
-.featured .journal-img-wrapper {
-    height: 100%;
-    min-height: 400px;
-}
-
-.journal-img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.8s ease;
-}
-
-.journal-content {
-    padding: 30px;
-}
-
-.journal-content .category {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--PEACH);
-    letter-spacing: 2px;
-    display: block;
-    margin-bottom: 10px;
-}
-
-.journal-content h3 {
-    font-family: 'Playfair Display', serif;
-    color: var(--DARKRED);
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    line-height: 1.2;
-}
-
-.journal-content p {
-    font-size: 0.9rem;
-    color: var(--DARKPEACHPURPLE);
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-.read-more {
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-decoration: none;
-    color: var(--DARKRED);
-    border-bottom: 2px solid var(--PEACH);
-    padding-bottom: 4px;
-    transition: all 0.3s ease;
-}
-
-/* Interaction Effects */
-.journal-card:hover {
-    transform: translateY(-5px);
-}
-
-.journal-card:hover img {
-    transform: scale(1.05);
-}
-
-.read-more:hover {
-    color: var(--PEACH);
-    border-bottom-color: var(--DARKRED);
-}
-
-.journal-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(133, 79, 108, 0.2); /* Using your DARKPEACHPURPLE for the shadow */
+.submit-btn:hover {
+    background-color: var(--RED);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(180, 27, 45, 0.2);
 }
 
 /* Footer Styling */
 .main-footer {
-    background-color: var(--DARKRED);
-    color: var(--LIGHTPEACH);
+    background-color: var(--text-main);
+    color: var(--nav-bg);
     padding: 60px 5% 20px;
 }
 
@@ -490,7 +595,7 @@ body {
 .footer-links a, .social-icons a {
     display: block;
     text-decoration: none;
-    color: var(--LIGHTPEACH);
+    color: var(--nav-bg);
     margin-bottom: 10px;
     font-size: 0.9rem;
     transition: 0.3s;
@@ -504,6 +609,21 @@ body {
     text-align: center;
     font-size: 0.7rem;
     letter-spacing: 1px;
+}
+
+/* --- Map Container --- */
+.map-container {
+    border: 2px solid var(--PEACH);
+    border-radius: 8px;
+    overflow: hidden;
+    filter: grayscale(0.5); /* Gives it a "boutique" editorial look */
+    transition: filter 0.3s ease;
+}
+.map-container:hover { filter: grayscale(0); }
+
+.themakerid{
+    text-decoration: underline;
+    color: var(--nav-bg);
 }
 
 /* ==========================================================================
@@ -557,7 +677,7 @@ body {
         top: 0; /* Cover full screen */
         flex-direction: column;
         justify-content: center;
-        background-color: var(--LIGHTPEACH);
+        background-color: var(--nav-bg);
         width: 100%;
         height: 100vh;
         text-align: center;
@@ -578,9 +698,6 @@ body {
     .product-grid { 
         grid-template-columns: repeat(2, 1fr); 
         gap: 15px;
-    }
-    .journal-grid { 
-        grid-template-columns: 1fr; 
     }
     .footer-content { 
         grid-template-columns: 1fr; 
