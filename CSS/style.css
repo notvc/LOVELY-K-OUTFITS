@@ -506,59 +506,46 @@ body {
     letter-spacing: 1px;
 }
 
-/* Final Combined Responsive Logic */
+/* ==========================================================================
+   COMBINED RESPONSIVE LOGIC
+   ========================================================================== */
+
+/* --- LARGE TABLETS (Max 1200px) --- */
+@media (max-width: 1200px) {
+    .product-grid { 
+        grid-template-columns: repeat(3, 1fr); 
+    }
+    .journal-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* --- MEDIUM TABLETS (Max 1024px) --- */
 @media (max-width: 1024px) {
-    .journal-grid { grid-template-columns: repeat(2, 1fr); }
-    .footer-content { grid-template-columns: 1fr 1fr; }
-}
-
-@media (max-width: 768px) {
-    .logo h3 { font-size: 24px; } /* Fixed giant mobile logo */
-    .journal-grid { grid-template-columns: 1fr; }
-    .footer-content { grid-template-columns: 1fr; text-align: center; }
-    .navbar ul { display: none; } /* Standard hidden nav for mobile toggle */
-    .navbar ul.active { display: flex; } 
-}
-
-/* Responsive Journal */
-@media (max-width: 1200px) {
-    .journal-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2x2 grid on tablets */
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .footer-content { 
+        grid-template-columns: 1fr 1fr; 
     }
 }
 
-@media (max-width: 650px) {
-    .journal-grid {
-        grid-template-columns: 1fr; /* Stacked on phones */
+/* --- MOBILE DEVICES (Max 768px) --- */
+@media (max-width: 768px) {
+    /* Logo & Header */
+    .logo h3 { 
+        font-size: 24px; 
     }
-}
+    .product-header h2 { 
+        font-size: 1.8rem; 
+    }
 
-/* Responsive Adjustments */
-@media (max-width: 1200px) {
-    .product-grid { grid-template-columns: repeat(3, 1fr); } /* 3 columns for tablets */
-}
-
-@media (max-width: 768px) {
-    .product-grid { grid-template-columns: repeat(2, 1fr); } /* 2 columns for mobile */
-    .product-header h2 { font-size: 1.8rem; }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
+    /* Navbar & Mobile Menu */
     .navbar {
-        flex-direction: column;
-        gap: 15px;
+        flex-direction: row; /* Keep logo and hamburger on same line */
+        justify-content: space-between;
     }
-    
-    .navbar ul li {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-    }
-    
-    .search-container:hover {
-        width: 100%; /* Full width on mobile */
-    }
+
     .menu-toggle {
         display: block;
         z-index: 1001;
@@ -566,28 +553,60 @@ body {
 
     .nav-links {
         position: fixed;
-        left: -100%; /* Hide off-screen */
-        top: 70px;
+        left: -100%;
+        top: 0; /* Cover full screen */
         flex-direction: column;
+        justify-content: center;
         background-color: var(--LIGHTPEACH);
         width: 100%;
         height: 100vh;
         text-align: center;
-        transition: 0.3s;
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
-        padding-top: 50px;
+        z-index: 1000;
     }
 
     .nav-links.active {
-        left: 0; /* Slide in */
+        left: 0;
     }
 
     .nav-links li {
-        margin: 25px 0;
+        margin: 20px 0;
     }
 
-    /* Animate Hamburger to 'X' when active */
+    /* Grids & Footer */
+    .product-grid { 
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 15px;
+    }
+    .journal-grid { 
+        grid-template-columns: 1fr; 
+    }
+    .footer-content { 
+        grid-template-columns: 1fr; 
+        text-align: center; 
+        gap: 30px;
+    }
+
+    .search-container:hover {
+        width: 180px; /* Smaller expansion for mobile screens */
+    }
+
+    /* Hamburger Animation to 'X' */
     .menu-toggle.is-active .bar:nth-child(2) { opacity: 0; }
     .menu-toggle.is-active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
     .menu-toggle.is-active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+}
+
+/* --- SMALL PHONES (Max 600px) --- */
+@media (max-width: 600px) {
+    .category-grid {
+        grid-template-columns: 1fr;
+    }
+    .grid-item {
+        height: 300px;
+    }
+    .product-grid {
+        grid-template-columns: 1fr; /* Single column for very small screens */
+    }
 }
