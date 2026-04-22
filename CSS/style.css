@@ -428,6 +428,9 @@ body {
     text-align: center;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
+[data-theme="dark"] .testimonial-card p {
+    color: var(--TEXTCOLOR);
+}
 .testimonial-card p { font-style: italic; color: var(--DARKRED); }
 .testimonial-card h4 { margin-top: 20px; color: var(--RED); letter-spacing: 2px; }
 
@@ -589,7 +592,7 @@ body {
     font-size: 0.8rem;
     letter-spacing: 2px;
     margin-bottom: 20px;
-    color: var(--PEACH);
+    color: var(--nav-bg);
 }
 
 .footer-links a, .social-icons a {
@@ -599,6 +602,31 @@ body {
     margin-bottom: 10px;
     font-size: 0.9rem;
     transition: 0.3s;
+}
+/* Remove the old .fa-brands { height: 100px; width: 100px; } */
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.social-icons a {
+    font-size: 1.5rem; /* This controls the actual size of the icon */
+    transition: transform 0.3s ease, color 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* Specific Brand Colors */
+.fa-whatsapp { color: var(--nav-bg); }
+.fa-facebook { color: var(--nav-bg); }
+.fa-instagram { color: var(--nav-bg); }
+
+/* Hover Effect */
+.social-icons a:hover {
+    transform: translateY(-5px);
+    filter: brightness(1.2);
 }
 
 .footer-links a:hover { color: var(--PEACH); }
@@ -664,6 +692,7 @@ body {
     .navbar {
         flex-direction: row; /* Keep logo and hamburger on same line */
         justify-content: space-between;
+        gap: 15px;
     }
 
     .menu-toggle {
