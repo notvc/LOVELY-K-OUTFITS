@@ -21,10 +21,11 @@ A sophisticated, editorial-style e-commerce boutique website designed for high-f
     *   Add items to cart with quantity management.
     *   Real-time subtotal calculation.
     *   Interactive dropdown cart preview.
-*   **🔍 Expanding Search Bar**: A sleek, animated search input that expands on interaction.
+    *   **Direct WhatsApp Checkout**: Seamlessly transition from cart to chat with a pre-formatted order summary.
+*   **🔍 Real-time Product Search**: A sleek, animated search bar that filters products instantly by name, description, or category with keyword highlighting.
 *   **🛍️ Featured Collection**:
     *   Dynamic product rendering from a database.
-    *   "Show More/Less" logic that adapts to screen size.
+    *   Smart "Show More/Less" logic that adapts to screen size and search states.
     *   Quick-view product modals with detailed descriptions.
 *   **📱 Responsive Navigation**: A sticky navbar featuring a mobile-friendly hamburger menu.
 *   **📩 AJAX Contact Form**: A custom-validated contact form that submits data to **Google Sheets** in the background without refreshing the page.
@@ -123,8 +124,6 @@ Before deploying, ensure the following are updated:
 
 ## ⚠️ Known Issues / TODO
 
-*   [ ] Implement a search filtering logic for the product grid.
-*   [ ] Add a checkout page for final order summary.
 *   [ ] Optimize image sizes for faster mobile loading.
 *   [ ] Connect a real backend for product management.
 
