@@ -15,13 +15,18 @@ document.querySelectorAll('.nav-links li a').forEach(link => {
 });
 
 // Shopping Cart System
-let cart = [];
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
 const cartBtn = document.getElementById('cart-btn');
 const cartDropdown = document.getElementById('cart-dropdown');
 const cartItemsContainer = document.getElementById('cart-items');
 const cartCountBadge = document.getElementById('cart-count');
 const cartTotalDisplay = document.getElementById('cart-total');
 const checkoutBtn = document.getElementById('checkout-btn');
+
+// Initialize cart UI on load
+document.addEventListener('DOMContentLoaded', () => {
+    updateCart();
+});
 
 // Toggle cart dropdown
 cartBtn.addEventListener('click', (e) => {
@@ -56,6 +61,9 @@ function addToCart(product) {
 
 // Update cart display
 function updateCart() {
+    // Save to localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+
     // Update count badge
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartCountBadge.textContent = totalItems;
@@ -138,6 +146,7 @@ checkoutBtn.addEventListener('click', () => {
     window.open(whatsappUrl, '_blank');
     
     cart = [];
+    localStorage.removeItem('cart');
     updateCart();
     cartDropdown.style.display = 'none';
 });
