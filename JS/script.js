@@ -28,15 +28,17 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCart();
 });
 
-// Toggle cart dropdown
-cartBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    cartDropdown.style.display = cartDropdown.style.display === 'block' ? 'none' : 'block';
+// Open cart modal
+cartBtn.addEventListener('click', () => {
+    cartDropdown.style.display = 'flex';
 });
 
-// Close cart dropdown when clicking outside
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('.cart-control')) {
+// Move cart dropdown to document body so it escapes the navbar stacking context
+document.body.appendChild(cartDropdown);
+
+// Close cart modal via overlay or close button
+cartDropdown.addEventListener('click', (e) => {
+    if (e.target === cartDropdown || e.target.closest('.cart-close') || e.target.closest('.continue-shopping-btn')) {
         cartDropdown.style.display = 'none';
     }
 });
@@ -148,7 +150,7 @@ checkoutBtn.addEventListener('click', () => {
     cart = [];
     localStorage.removeItem('cart');
     updateCart();
-    cartDropdown.style.display = 'none';
+    cartDropdown.style.display = 'none'; // Hide modal after checkout
 });
 // Scroll Reveal
 const revealObserver = new IntersectionObserver((entries) => {
@@ -226,10 +228,11 @@ function renderProducts(dataList, count, isSearch = false, searchTerm = "") {
     dataList.slice(0, count).forEach((product, index) => {
         const card = document.createElement('div');
         card.classList.add('product-card', 'reveal');
+        card.setAttribute('data-category', product.category);
         card.style.cursor = 'pointer';
 
         // Highlight logic for product name
-        const displayName = searchTerm 
+        const displayName = searchTerm
             ? product.name.replace(new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '<mark class="highlight">$1</mark>')
             : product.name;
 
@@ -330,30 +333,53 @@ function renderProducts(dataList, count, isSearch = false, searchTerm = "") {
     }
 }
 
-// Category Grid Filtering Logic
-document.querySelectorAll('.grid-item').forEach(item => {
+// Category Grid Logic: Single Click vs Double-Tap with Timer
+const categoryCards = document.querySelectorAll('.category-card');
+categoryCards.forEach(card => {
+    let clickCount = 0;
     let clickTimer = null;
 
-    item.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (clickTimer) {
-            // Double click — navigate to page
+    card.addEventListener('click', () => {
+        clickCount++;
+
+        if (clickCount === 2) {
+            // Double click/tap detected
             clearTimeout(clickTimer);
-            clickTimer = null;
-            window.location.href = item.getAttribute('href');
-            return;
+            clickCount = 0;
+            const url = card.getAttribute('data-url');
+            if (url) window.location.href = url;
+        } else if (clickCount === 1) {
+            clickTimer = setTimeout(() => {
+                if (clickCount === 1) {
+                    // Single click confirmed after timer expires
+                    const category = card.getAttribute('data-category');
+
+                    // Update UI State
+                    categoryCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+
+                    // Smooth Fade Out for Grid
+                    productContainer.style.opacity = '0';
+                    productContainer.style.transform = 'translateY(10px)';
+
+                    setTimeout(() => {
+                        if (category === 'all') {
+                            itemsToShow = getInitialItemCount();
+                            allItemsShown = false;
+                            renderProducts(products, itemsToShow);
+                        } else {
+                            const filtered = products.filter(p => p.category === category);
+                            renderProducts(filtered, filtered.length);
+                        }
+
+                        // Smooth Fade In for Grid
+                        productContainer.style.opacity = '1';
+                        productContainer.style.transform = 'translateY(0)';
+                    }, 350);
+                }
+                clickCount = 0;
+            }, 280);
         }
-        // Single click — filter products
-        clickTimer = setTimeout(() => {
-            clickTimer = null;
-            const category = item.dataset.category;
-            const filtered = products.filter(p => p.category === category);
-            const header = document.querySelector('.product-header h2');
-            if (header) header.textContent = category.toUpperCase() + " COLLECTION";
-            document.querySelector('#product-container').scrollIntoView({ behavior: 'smooth' });
-            allItemsShown = true;
-            renderProducts(filtered, filtered.length, true);
-        }, 250);
     });
 });
 
@@ -609,7 +635,7 @@ function openProductModal(product) {
     addBtn.onclick = () => {
         addToCart(product);
         modal.remove();
-        cartDropdown.style.display = 'block';
+        cartDropdown.style.display = 'flex';
     };
 
     modalContent.appendChild(closeBtn);
@@ -629,20 +655,6 @@ function openProductModal(product) {
         }
     };
 }
-
-// Add animation styles
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes overlayFadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    @keyframes modalSlideUp {
-        from { transform: translateY(40px) scale(0.96); opacity: 0; }
-        to   { transform: translateY(0) scale(1); opacity: 1; }
-    }
-`;
-document.head.appendChild(style);
 
 // Close any open modal with Escape key
 document.addEventListener('keydown', (e) => {

@@ -16,7 +16,7 @@
 
     <nav>
         <div class="navbar">
-            <a href="index.html"class="logo"><!-- <img src="../PICS/icons8-shop-50.png" alt="boutique-logo"> --><h3>LOVELY K OUTFITS & HAIR</h3></a>
+            <a href="index.html" class="logo"><h3>LOVELY K OUTFITS & HAIR</h3></a>
             <div class="menu-toggle" id="mobile-menu">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -48,16 +48,20 @@
                         <span id="cart-count" class="cart-count">0</span>
                     </button>
                     <div id="cart-dropdown" class="cart-dropdown">
-                        <div class="cart-header">
-                            <h3>SHOPPING CART</h3>
-                        </div>
-                        <div id="cart-items" class="cart-items"></div>
-                        <div class="cart-footer">
-                            <div class="cart-total">
-                                <span>Total:</span>
-                                <span id="cart-total">₦0</span>
+                        <div class="cart-modal-content">
+                            <button class="cart-close">✕</button>
+                            <div class="cart-header">
+                                <h3>SHOPPING CART</h3>
                             </div>
-                            <button id="checkout-btn" class="checkout-btn">PLACE AN ORDER</button>
+                            <div id="cart-items" class="cart-items"></div>
+                            <div class="cart-footer">
+                                <div class="cart-total">
+                                    <span>Total:</span>
+                                    <span id="cart-total">₦0</span>
+                                </div>
+                                <button id="checkout-btn" class="checkout-btn">PLACE AN ORDER</button>
+                                <button class="continue-shopping-btn">CONTINUE SHOPPING</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -65,31 +69,66 @@
         </div>
     </nav>
 <section class="category-grid">
-    <a href="menclothes.html" class="grid-item men reveal reveal-delay-1" data-category="men">
-        <div class="overlay">
-            <h2>MEN</h2>
+    <div class="category-header reveal">
+        <h2>EXPLORE COLLECTIONS</h2>
+        <p>Curated styles for every occasion</p>
+    </div>
+    <div class="grid-container">
+        <div class="category-card reveal active" data-category="all">
+            <div class="card-bg all-bg"></div>
+            <div class="overlay">
+                <div class="overlay-content">
+                    <h2>ALL</h2>
+                    <p class="click-hint">View everything</p>
+                </div>
+            </div>
         </div>
-    </a>
-    <a href="womenclothes.html" class="grid-item women reveal reveal-delay-2" data-category="women">
-        <div class="overlay">
-            <h2>WOMEN</h2>
+        <div class="category-card reveal reveal-delay-1" data-category="men" data-url="menclothes.html">
+            <div class="card-bg men"></div>
+            <div class="overlay">
+                <div class="overlay-content">
+                    <h2>MEN</h2>
+                    <p class="click-hint">Double-tap to browse</p>
+                </div>
+            </div>
         </div>
-    </a>
-    <a href="accesories.html" class="grid-item accessories reveal reveal-delay-3" data-category="accessories">
-        <div class="overlay">
-            <h2>ACCESSORIES</h2>
+        <div class="category-card reveal reveal-delay-2" data-category="women" data-url="womenclothes.html">
+            <div class="card-bg women"></div>
+            <div class="overlay">
+                <div class="overlay-content">
+                    <h2>WOMEN</h2>
+                    <p class="click-hint">Double-tap to browse</p>
+                </div>
+            </div>
         </div>
-    </a>
-    <a href="shoes.html" class="grid-item shoes reveal reveal-delay-4" data-category="shoes">
-        <div class="overlay">
-            <h2>SHOES</h2>
+        <div class="category-card reveal reveal-delay-3" data-category="accessories" data-url="accesories.html">
+            <div class="card-bg accessories"></div>
+            <div class="overlay">
+                <div class="overlay-content">
+                    <h2>ACCESSORIES</h2>
+                    <p class="click-hint">Double-tap to browse</p>
+                </div>
+            </div>
         </div>
-    </a>
-    <a href="hair.html" class="grid-item hair reveal reveal-delay-5" data-category="hair">
-        <div class="overlay">
-            <h2>HAIR</h2>
+        <div class="category-card reveal reveal-delay-4" data-category="shoes" data-url="shoes.html">
+            <div class="card-bg shoes"></div>
+            <div class="overlay">
+                <div class="overlay-content">
+                    <h2>SHOES</h2>
+                    <p class="click-hint">Double-tap to browse</p>
+                </div>
+            </div>
         </div>
-    </a>
+        <div class="category-card reveal reveal-delay-5" data-category="hair" data-url="hair.html">
+            <div class="card-bg hair"></div>
+            <div class="overlay">
+                <div class="overlay-content">
+                    <h2>HAIR</h2>
+                    <p class="click-hint">Double-tap to browse</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 <section class="products-section">
     <div class="product-header">
