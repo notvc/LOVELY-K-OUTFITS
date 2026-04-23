@@ -141,10 +141,27 @@ checkoutBtn.addEventListener('click', () => {
     updateCart();
     cartDropdown.style.display = 'none';
 });
+// Scroll Reveal
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.classList.contains('visible')) {
+            entry.target.classList.add('visible'); // Add 'visible' class
+            revealObserver.unobserve(entry.target); // Stop observing once revealed
+        } 
+    });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+function observeRevealElements() {
+    document.querySelectorAll('.reveal:not([data-observed])').forEach(el => {
+        el.setAttribute('data-observed', 'true');
+        revealObserver.observe(el);
+    });
+}
+
 // 2. New Product Generation Logic
 const productContainer = document.querySelector('#product-container');
 
-// 20 Dummy Products Database with Category tags
+// Products Database with all categories
 const products = [
     { name: "Silk Wrap Dress", price: "₦25,000", img: "../PICS/product1.jpg", badge: "New", description: "Luxurious silk wrap dress.", category: "women" },
     { name: "Vintage Denim", price: "₦18,500", img: "../PICS/product2.jpg", badge: "", description: "Classic vintage denim.", category: "men" },
@@ -165,7 +182,17 @@ const products = [
     { name: "Midi Skirt", price: "₦15,000", img: "../PICS/product17.jpg", badge: "Hot", description: "Elegant midi skirt.", category: "women" },
     { name: "Cashmere Sweater", price: "₦32,000", img: "../PICS/product18.jpg", badge: "", description: "Luxurious cashmere sweater.", category: "women" },
     { name: "Cocktail Dress", price: "₦28,000", img: "../PICS/product19.jpg", badge: "New", description: "Sophisticated cocktail dress.", category: "women" },
-    { name: "Tailored Trousers", price: "₦17,000", img: "../PICS/product20.jpg", badge: "", description: "Professional tailored trousers.", category: "men" }
+    { name: "Tailored Trousers", price: "₦17,000", img: "../PICS/product20.jpg", badge: "", description: "Professional tailored trousers.", category: "men" },
+    { name: "Classic Loafers", price: "₦28,000", img: "../PICS/shoes1.jpg", badge: "", description: "Sophisticated leather loafers.", category: "shoes" },
+    { name: "Stiletto Heels", price: "₦32,000", img: "../PICS/shoes2.jpg", badge: "Hot", description: "Elegant high heel stilettos.", category: "shoes" },
+    { name: "Sneaker Trainers", price: "₦24,000", img: "../PICS/shoes3.jpg", badge: "Sale", description: "Comfortable fashion sneakers.", category: "shoes" },
+    { name: "Ankle Boots", price: "₦29,500", img: "../PICS/shoes4.jpg", badge: "New", description: "Chic ankle length boots.", category: "shoes" },
+    { name: "Casual Slip-ons", price: "₦18,000", img: "../PICS/shoes5.jpg", badge: "", description: "Easy-to-wear slip-on shoes.", category: "shoes" },
+    { name: "Luxury Hair Extensions", price: "₦15,000", img: "../PICS/hair1.jpg", badge: "New", description: "Premium human hair extensions.", category: "hair" },
+    { name: "Wig Collection", price: "₦22,000", img: "../PICS/hair2.jpg", badge: "", description: "Beautiful lace front wigs.", category: "hair" },
+    { name: "Hair Growth Oil", price: "₦8,500", img: "../PICS/hair3.jpg", badge: "Sale", description: "Organic hair growth treatment.", category: "hair" },
+    { name: "Braiding Bundle", price: "₦12,000", img: "../PICS/hair4.jpg", badge: "Hot", description: "Quality synthetic braiding hair.", category: "hair" },
+    { name: "Hair Care Set", price: "₦11,000", img: "../PICS/hair5.jpg", badge: "", description: "Complete hair maintenance kit.", category: "hair" }
 ];
 
 // Determine initial items to show based on screen size
@@ -189,7 +216,7 @@ function renderProducts(dataList, count, isSearch = false, searchTerm = "") {
 
     dataList.slice(0, count).forEach((product, index) => {
         const card = document.createElement('div');
-        card.classList.add('product-card');
+        card.classList.add('product-card', 'reveal');
         card.style.cursor = 'pointer';
 
         // Highlight logic for product name
@@ -223,8 +250,14 @@ function renderProducts(dataList, count, isSearch = false, searchTerm = "") {
             });
         }
 
+        // Manually trigger visibility with a stagger for items likely already in the viewport
+        setTimeout(() => {
+            card.classList.add('visible');
+        }, index * 80);
+
         productContainer.appendChild(card);
     });
+    observeRevealElements(); // Observe newly rendered products
     
     // Add "Show More" or "Show Less" button (disabled during search)
     if (!isSearch && (count < dataList.length || allItemsShown)) {
@@ -270,11 +303,13 @@ function renderProducts(dataList, count, isSearch = false, searchTerm = "") {
                 itemsToShow = getInitialItemCount();
                 allItemsShown = false;
                 renderProducts(products, itemsToShow);
+                observeRevealElements();
             } else if (window.innerWidth >= 768) {
                 // Desktop: Show all remaining items
                 itemsToShow = products.length;
                 allItemsShown = true;
                 renderProducts(products, itemsToShow);
+                observeRevealElements();
             } else {
                 // Mobile: Navigate to products page
                 window.location.href = 'products.html';
@@ -320,6 +355,9 @@ renderProducts(products, itemsToShow);
 const typingTarget = document.querySelector('.product-header h3');
 if (typingTarget) {
     const fullText = typingTarget.textContent;
+    // FIX 5: Protect the typing effect element from the reveal observer
+    typingTarget.classList.remove('reveal', 'reveal-delay-2');
+    typingTarget.style.cssText = 'opacity: 1; transform: none;';
     typingTarget.textContent = '';
     typingTarget.classList.add('typing-cursor');
 
@@ -422,7 +460,23 @@ const testimonials = [
     { text: "The hair quality is unmatched. I feel like a queen!", author: "Kemi A." },
     { text: "Best boutique in the city. The customer service is 10/10.", author: "Sandra O." },
     { text: "Lovely K transformed my wardrobe. Elegant and affordable.", author: "Joy I." },
-    { text: "My go-to for accessories. Always on trend!", author: "Blessing T." }
+    { text: "My go-to for accessories. Always on trend!", author: "Blessing T." },
+    { text: "The fabrics are so luxurious and the fits are perfect. Highly recommend!", author: "Zainab M." },
+    { text: "Every piece I've bought here has lasted forever. Quality never disappoints.", author: "Chioma E." },
+    { text: "Their women's collection is absolutely stunning. I can't stop buying!", author: "Amara K." },
+    { text: "The styling advice here is incredible. They really know fashion.", author: "Precious O." },
+    { text: "Best shoes in town. Comfortable AND fashionable. Rare combo!", author: "Nneka S." },
+    { text: "I got compliments on my outfit all day. Thanks, Lovely K!", author: "Tunde B." },
+    { text: "The men's clothing here is sleek and professional. Perfect for work.", author: "Seun A." },
+    { text: "Customer service is exceptional. They helped me find the perfect match.", author: "Blessing N." },
+    { text: "The pieces I bought are investment-worthy. So elegant and timeless.", author: "Funke I." },
+    { text: "Finally found a boutique that understands true style and quality.", author: "Ada C." },
+    { text: "The accessories collection is to die for. Every item is gorgeous!", author: "Oprah T." },
+    { text: "I felt like royalty shopping here. The entire experience was delightful.", author: "Grace M." },
+    { text: "Best-kept secret in fashion. Don't tell everyone, please!", author: "Ifeyinwa L." },
+    { text: "The attention to detail in every garment is remarkable. Worth every naira.", author: "Naja H." },
+    { text: "My sister and I both love shopping here. It's become our favorite spot.", author: "Yvonne P." },
+    { text: "Quality, style, and affordability in one place? Lovely K nailed it!", author: "Zoe R." }
 ];
 
 const track = document.getElementById('testimonial-track');
@@ -437,10 +491,12 @@ if (track) {
         `;
         track.appendChild(card);
     });
+    observeRevealElements();
 }
 
 // 5. CAROUSEL LOGIC
-let index = 0;
+// FIX 4: Rename carousel index variable to avoid collision
+let carouselIndex = 0;
 const nextBtn = document.querySelector('.next');
 const prevBtn = document.querySelector('.prev');
 
@@ -448,14 +504,14 @@ function updateCarousel() {
     const cards = document.querySelectorAll('.testimonial-card');
     if (cards.length > 0) {
         const width = cards[0].offsetWidth + 20; // Each card width + gap
-        track.style.transform = `translateX(-${index * width}px)`;
+        track.style.transform = `translateX(-${carouselIndex * width}px)`;
         
         // Calculate how many cards are actually visible
         const containerWidth = document.querySelector('.carousel-container').offsetWidth;
         const visibleCards = Math.round(containerWidth / width);
         
-        if(prevBtn) prevBtn.disabled = (index === 0);
-        if(nextBtn) nextBtn.disabled = (index >= cards.length - visibleCards);
+        if(prevBtn) prevBtn.disabled = (carouselIndex === 0);
+        if(nextBtn) nextBtn.disabled = (carouselIndex >= cards.length - visibleCards);
     }
 }
 
@@ -464,16 +520,16 @@ if (nextBtn && prevBtn) {
         const cards = document.querySelectorAll('.testimonial-card');
         const containerWidth = document.querySelector('.carousel-container').offsetWidth;
         const width = cards[0].offsetWidth + 20;
-        const visibleCards = Math.round(containerWidth / width);
-        if (index < cards.length - visibleCards) {
-            index++;
+        const visibleCards = Math.floor(containerWidth / width); // Use floor to be safe with partial cards
+        if (carouselIndex < cards.length - visibleCards) {
+            carouselIndex++;
             updateCarousel();
         }
     });
 
     prevBtn.addEventListener('click', () => {
-        if (index > 0) {
-            index--;
+        if (carouselIndex > 0) {
+            carouselIndex--;
             updateCarousel();
         }
     });
@@ -568,13 +624,13 @@ function openProductModal(product) {
 // Add animation styles
 const style = document.createElement('style');
 style.textContent = `
-    @keyframes fadeIn {
+    @keyframes overlayFadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
     }
-    @keyframes slideUp {
-        from { transform: translateY(30px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
+    @keyframes modalSlideUp {
+        from { transform: translateY(40px) scale(0.96); opacity: 0; }
+        to   { transform: translateY(0) scale(1); opacity: 1; }
     }
 `;
 document.head.appendChild(style);
@@ -628,6 +684,7 @@ if (contactForm) {
     });
 }
 
+// FIX 2: Define the missing showInfoModal function (moved showThankYouModal here for proximity)
 function showThankYouModal() {
     const modal = document.createElement('div');
     modal.className = 'product-modal-overlay';
@@ -638,6 +695,25 @@ function showThankYouModal() {
             <h2 class="modal-title">FORM SUBMITTED</h2>
             <p class="modal-description">Your message has been submitted. We'll be in touch soon.</p>
             <button class="checkout-btn" onclick="this.parentElement.parentElement.remove()">BACK TO SHOP</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+}
+
+// FIX 2: Define the missing showInfoModal function
+function showInfoModal(title, message) {
+    const modal = document.createElement('div');
+    modal.className = 'product-modal-overlay';
+    modal.innerHTML = `
+        <div class="product-modal-content" style="text-align: center;">
+            <button class="modal-close" onclick="this.parentElement.parentElement.remove()">✕</button>
+            <div style="font-size: 3rem; color: var(--PEACH); margin-bottom: 20px;">
+                <i class="fa-solid fa-circle-exclamation"></i>
+            </div>
+            <h2 class="modal-title">${title}</h2>
+            <p class="modal-description">${message}</p>
+            <button class="checkout-btn" onclick="this.parentElement.parentElement.remove()">OK</button>
         </div>
     `;
     document.body.appendChild(modal);
@@ -662,18 +738,8 @@ if (phoneInput) {
     });
 }
 
-// Scroll Reveal
-const revealElements = document.querySelectorAll('.reveal');
-const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            revealObserver.unobserve(entry.target); // Animate once only
-        }
-    });
-}, { threshold: 0.15 });
-
-revealElements.forEach(el => revealObserver.observe(el));
+// Initial observation for existing elements
+observeRevealElements();
 
 // Back to Top Button Logic
 const backToTopBtn = document.getElementById('back-to-top');

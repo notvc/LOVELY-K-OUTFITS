@@ -3,9 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="icon" type="image/png" href="../PICS/icons8-shop-50.png">
+    <title>ACCESSORIES | LOVELY K OUTFITS</title>
+    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    
+    <!-- Full Page Preloader -->
+    <div id="preloader">
+        <div class="spinner"></div>
+    </div>
+
+    <nav>
+        <div class="navbar">
+            <a href="index.html" class="logo"><h3>LOVELY K OUTFITS & HAIR</h3></a>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-links" id="nav-list">
+                <li><a href="menclothes.html">MEN CLOTHES</a></li>
+                <li><a href="womenclothes.html">WOMEN CLOTHES</a></li>
+                <li><a href="accesories.html">ACCESORIES</a></li>
+                <li><a href="shoes.html">SHOES</a></li>
+                <li><a href="hair.html">HAIR</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="search-container">
+                    <input type="text" placeholder="Search trends..." class="search-input">
+                    <div class="search-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </div>
+                </div>
+                <div class="theme-control">
+                    <button id="theme-toggle" class="theme-btn">
+                        <i class="fa-solid fa-sun theme-icon sun-icon"></i>
+                        <i class="fa-solid fa-moon theme-icon moon-icon"></i>
+                    </button>
+                </div>
+                <div class="cart-control">
+                    <button id="cart-btn" class="cart-btn">
+                        <i class="fa-solid fa-shopping-bag"></i>
+                        <span id="cart-count" class="cart-count">0</span>
+                    </button>
+                    <div id="cart-dropdown" class="cart-dropdown">
+                        <div class="cart-header">
+                            <h3>SHOPPING CART</h3>
+                        </div>
+                        <div id="cart-items" class="cart-items"></div>
+                        <div class="cart-footer">
+                            <div class="cart-total">
+                                <span>Total:</span>
+                                <span id="cart-total">₦0</span>
+                            </div>
+                            <button id="checkout-btn" class="checkout-btn">CHECKOUT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="products-section">
+        <div class="product-header">
+            <h2 class="reveal reveal-delay-1">ACCESSORIES COLLECTION</h2>
+            <h3 class="reveal reveal-delay-2">Complete Your Perfect Look</h3>
+        </div>
+        <div class="product-grid" id="product-container"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h2>LOVELY K OUTFITS & HAIR</h2>
+                <p>Your destination for premium fashion and luxury hair products.</p>
+            </div>
+            <div class="footer-links">
+                <h4>QUICK LINKS</h4>
+                <a href="index.html">Home</a>
+                <a href="menclothes.html">Men Clothes</a>
+                <a href="womenclothes.html">Women Clothes</a>
+                <a href="accesories.html">Accessories</a>
+                <a href="shoes.html">Shoes</a>
+            </div>
+            <div class="footer-links">
+                <h4>SUPPORT</h4>
+                <a href="#contact-section">Contact Us</a>
+                <a href="#about-section">About Us</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+            </div>
+            <div class="footer-socials">
+                <h4>FOLLOW US</h4>
+                <div class="social-icons">
+                    <a href="https://wa.me/2348000000000" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="https://facebook.com/lovelykoutfits" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://instagram.com/lovelykoutfits" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LOVELY K OUTFITS & HAIR. All rights reserved. | Made with <span style="color: var(--PEACH);">❤</span> by <span class="themakerid">The Maker ID</span></p>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top">↑</button>
+
+    <script src="../JS/script.js"></script>
+    <script>
+        // Filter to show only accessories products
+        document.addEventListener('DOMContentLoaded', () => {
+            const accessoryProducts = products.filter(p => p.category === 'accessories');
+            renderProducts(accessoryProducts, accessoryProducts.length);
+        });
+    </script>
 </body>
 </html>
