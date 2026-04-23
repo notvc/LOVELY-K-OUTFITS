@@ -115,7 +115,7 @@ function removeFromCart(index) {
 // Checkout
 checkoutBtn.addEventListener('click', () => {
     if (cart.length === 0) {
-        alert('Your cart is empty!');
+        showInfoModal('YOUR CART IS EMPTY', 'Add some items to your cart before checking out.');
         return;
     }
     
@@ -199,7 +199,7 @@ function renderProducts(dataList, count, isSearch = false, searchTerm = "") {
 
         card.innerHTML = `
             <div class="product-image loading">
-                <img src="${product.img}" alt="${product.name}">
+                <img src="${product.img}" alt="${product.name}" loading="lazy">
                 ${product.badge ? `<span class="badge">${product.badge}</span>` : ''}
             </div>
             <div class="product-info">
@@ -288,19 +288,28 @@ function renderProducts(dataList, count, isSearch = false, searchTerm = "") {
 
 // Category Grid Filtering Logic
 document.querySelectorAll('.grid-item').forEach(item => {
+    let clickTimer = null;
+
     item.addEventListener('click', (e) => {
         e.preventDefault();
-        // Get category from the second class (e.g., 'men', 'women')
-        const category = item.classList[1]; 
-        const filtered = products.filter(p => p.category === category);
-        
-        // Update UI and scroll to products
-        const header = document.querySelector('.product-header h2');
-        if (header) header.textContent = category.toUpperCase() + " COLLECTION";
-        
-        document.querySelector('#product-container').scrollIntoView({ behavior: 'smooth' });
-        allItemsShown = true; 
-        renderProducts(filtered, filtered.length, true);
+        if (clickTimer) {
+            // Double click — navigate to page
+            clearTimeout(clickTimer);
+            clickTimer = null;
+            window.location.href = item.getAttribute('href');
+            return;
+        }
+        // Single click — filter products
+        clickTimer = setTimeout(() => {
+            clickTimer = null;
+            const category = item.dataset.category;
+            const filtered = products.filter(p => p.category === category);
+            const header = document.querySelector('.product-header h2');
+            if (header) header.textContent = category.toUpperCase() + " COLLECTION";
+            document.querySelector('#product-container').scrollIntoView({ behavior: 'smooth' });
+            allItemsShown = true;
+            renderProducts(filtered, filtered.length, true);
+        }, 250);
     });
 });
 
@@ -569,6 +578,14 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// Close any open modal with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const openModal = document.querySelector('.product-modal-overlay');
+        if (openModal) openModal.remove();
+    }
+});
 
 // 7. CONTACT FORM AJAX SUBMISSION
 const contactForm = document.getElementById('contact-form');

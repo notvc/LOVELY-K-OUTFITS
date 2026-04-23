@@ -14,6 +14,7 @@
     --DARKPEACHPURPLE: #854F6C;
     --sun-color: var(--text-main);
     --moon-color: var(--PEACH);
+    --PEACH-surface: #FDA481;
 }
 /* Repeat this block for every weight (Bold, Regular, etc.) you want to use */
 @font-face {
@@ -39,7 +40,7 @@
     --moon-color: #54162B;
     --card-bg: #2D1B2D;
     --DIMPEACH:#54162B;
-    --PEACH:#54162B;
+    --PEACH-surface: #54162B;
 }
 [data-theme="dark"] .search-container {
     background: var(--nav-bg);
@@ -361,7 +362,7 @@ img {
 .cart-item-details p {
     margin: 5px 0 0;
     font-size: 0.8rem;
-    color: var(--PEACH);
+    color: var(--PEACH-surface);
     font-weight: 700;
 }
 
@@ -484,6 +485,26 @@ img {
     cursor: crosshair; /* Changes the cursor to a fashion-style crosshair */
 }
 
+.grid-item::before {
+    content: 'Double-click to browse';
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 5;
+    pointer-events: none;
+}
+.grid-item:hover::before {
+    opacity: 1;
+}
+
 /* Background images (Add your own image paths here) */
 .men { background-image: url('../PICS/men.jpg'); }
 .women { background-image: url('../PICS/women.jpg'); }
@@ -591,7 +612,7 @@ img {
     width: 100%;
     aspect-ratio: 3/4; /* Keeps all product photos uniform */
     overflow: hidden;
-    background-color: var(--DIMPEACH);
+    background-color: var(--PEACH-surface);
     position: relative;
 }
 
@@ -653,7 +674,7 @@ img {
 
 .product-info .price {
     font-weight: 600;
-    color: var(--bg-color);
+    color: var(--PEACH);
 }
 
 /* Hover Effects */
