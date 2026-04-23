@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+    <!-- Full Page Preloader -->
+    <div id="preloader">
+        <div class="spinner"></div>
+    </div>
+
     <nav>
         <div class="navbar">
             <a href="index.html"class="logo"><!-- <img src="../PICS/icons8-shop-50.png" alt="boutique-logo"> --><h3>LOVELY K OUTFITS & HAIR</h3></a>
@@ -24,40 +29,63 @@
                 <li><a href="shoes.html">SHOES</a></li>
                 <li><a href="hair.html">HAIR</a> </li>
             </ul>
-            <div class="search-container">
-            <input type="text" placeholder="Search trends..." class="search-input">
-                <div class="search-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <div class="nav-actions">
+                <div class="search-container">
+                <input type="text" placeholder="Search trends..." class="search-input">
+                    <div class="search-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </div>
                 </div>
-            </div>
-            <div class="theme-control">
-                <button id="theme-toggle" class="theme-btn">
-                <span id="theme-icon">☪</span></button>
+                <div class="theme-control">
+                    <button id="theme-toggle" class="theme-btn">
+                        <i class="fa-solid fa-sun theme-icon sun-icon"></i>
+                        <i class="fa-solid fa-moon theme-icon moon-icon"></i>
+                    </button>
+                </div>
+                <div class="cart-control">
+                    <button id="cart-btn" class="cart-btn">
+                        <i class="fa-solid fa-shopping-bag"></i>
+                        <span id="cart-count" class="cart-count">0</span>
+                    </button>
+                    <div id="cart-dropdown" class="cart-dropdown">
+                        <div class="cart-header">
+                            <h3>SHOPPING CART</h3>
+                        </div>
+                        <div id="cart-items" class="cart-items"></div>
+                        <div class="cart-footer">
+                            <div class="cart-total">
+                                <span>Total:</span>
+                                <span id="cart-total">₦0</span>
+                            </div>
+                            <button id="checkout-btn" class="checkout-btn">CHECKOUT</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 <section class="category-grid">
-    <a href="menclothes.html" class="grid-item men">
+    <a href="menclothes.html" class="grid-item men reveal reveal-delay-1">
         <div class="overlay">
             <h2>MEN</h2>
         </div>
     </a>
-    <a href="womenclothes.html" class="grid-item women">
+    <a href="womenclothes.html" class="grid-item women reveal reveal-delay-2">
         <div class="overlay">
             <h2>WOMEN</h2>
         </div>
     </a>
-    <a href="accesories.html" class="grid-item accessories">
+    <a href="accesories.html" class="grid-item accessories reveal reveal-delay-3">
         <div class="overlay">
             <h2>ACCESSORIES</h2>
         </div>
     </a>
-    <a href="shoes.html" class="grid-item shoes">
+    <a href="shoes.html" class="grid-item shoes reveal reveal-delay-4">
         <div class="overlay">
             <h2>SHOES</h2>
         </div>
     </a>
-    <a href="hair.html" class="grid-item hair">
+    <a href="hair.html" class="grid-item hair reveal reveal-delay-5">
         <div class="overlay">
             <h2>HAIR</h2>
         </div>
@@ -65,20 +93,20 @@
 </section>
 <section class="products-section">
     <div class="product-header">
-        <h2>FEATURED COLLECTION</h2>
-        <h3>Discover Your Next Favorite Look</h3>
+        <h2 class="reveal reveal-delay-1">FEATURED COLLECTION</h2>
+        <h3 class="reveal reveal-delay-2">Discover Your Next Favorite Look</h3>
     </div>
     <div class="product-grid" id="product-container"></div>
 </section>
 <section class="about-section">
     <div class="about-container">
-        <h1>OUR STORY</h1>
-        <p>At LOVELY K OUTFITS & HAIR, we believe that elegance is a language. Founded in 2026, our boutique serves as a sanctuary for those who seek high-fashion outfits and premium hair care under one roof. We blend modern UI/UX aesthetics with timeless style to bring you a curated collection that empowers your unique identity.</p>
+        <h1 class="reveal">OUR STORY</h1>
+        <p class="reveal reveal-delay-2">At LOVELY K OUTFITS & HAIR, we believe that elegance is a language. Founded in 2026, our boutique serves as a sanctuary for those who seek high-fashion outfits and premium hair care under one roof. We blend modern UI/UX aesthetics with timeless style to bring you a curated collection that empowers your unique identity.</p>
     </div>
 </section>
 <section class="testimonial-section">
     <div class="section-header">
-        <h2>WHAT OUR CLIENTS SAY</h2>
+        <h2 class="reveal">WHAT OUR CLIENTS SAY</h2>
     </div>
     <div class="carousel-container">
         <div class="carousel-track" id="testimonial-track">
@@ -91,28 +119,30 @@
 </section>
 <section class="contact-section">
     <div class="contact-container">
-        <h2>GET IN TOUCH</h2>
-        <form action="https://formspree.io/f/your-id" method="POST" id="contact-form">
-            <input type="text" name="name" placeholder="Your Name" required>
-            <input type="email" name="email" placeholder="Your Email" required>
-            <textarea name="message" placeholder="How can we help you?" rows="5" required></textarea>
+        <h2 class="reveal">GET IN TOUCH</h2>
+        <form action="https://docs.google.com/forms/d/e/1FAIpQLSd7pHKs6kdLmCl-_jF1OkGyzjvsZZdolWPuSBB6RqAo9uFhWg/formResponse" method="POST" id="contact-form" class="reveal reveal-delay-2">
+            <input type="text" name="entry.768668534" placeholder="Your Name" pattern="[A-Za-z\s]+" title="Name should only contain letters and spaces" required>
+            <input type="tel" name="entry.517569889" placeholder="Phone Number" pattern="[\+]?[0-9]{10,15}" title="Please enter a valid phone number (10-15 digits, optional +)" required>
+            <input type="email" name="entry.796386286" placeholder="Your Email" required title="Please enter a valid email address">
+            <textarea name="entry.1066784654" id="message-input" placeholder="How can we help you?" rows="5" maxlength="150" required></textarea>
+            <div id="char-counter" class="char-counter">0 / 150 characters</div>
             <button type="submit" class="submit-btn">SEND MESSAGE</button>
         </form>
     </div>
 </section>
 <footer class="main-footer">
     <div class="footer-content">
-        <div class="footer-brand">
+        <div class="footer-brand reveal reveal-delay-1">
             <h2>LOVELY K</h2>
             <p>Redefining elegance in outfits and hair care.</p>
         </div>
-        <div class="footer-links">
+        <div class="footer-links reveal reveal-delay-2">
             <h4>SHOP</h4>
             <a href="menclothes.html">Men</a>
             <a href="womenclothes.html">Women</a>
             <a href="hair.html">Hair</a>
         </div>
-        <div class="footer-socials">
+        <div class="footer-socials reveal reveal-delay-3">
             <h4>FOLLOW US</h4>
             <div class="social-icons">
                 <a href="#" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i></a>
@@ -120,7 +150,7 @@
                 <a href="#" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i></a>
             </div>
         </div>
-        <div class="footer-map">
+        <div class="footer-map reveal reveal-delay-4">
             <h4>VISIT OUR BOUTIQUE</h4>
             <div class="map-container">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3939.9864259535234!2d7.443356676071433!3d9.065000390997758!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x104e0bbfc61bfa77%3A0xc4ff1b38414470ce!2sLovely%20k%20outfits!5e0!3m2!1sen!2sng!4v1776875994256!5m2!1sen!2sng" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy">
@@ -129,9 +159,12 @@
         </div>
     </div>
     <div class="footer-bottom">
-        <p>&copy; 2026 LOVELY K OUTFITS & HAIR. All Rights Reserved. | Made by <a href="#" class="themakerid" target="_blank" rel="noopener noreferrer">NOTVC</a></p>
+        <p>&copy; 2026 LOVELY K OUTFITS & HAIR. All Rights Reserved. | Made by <a href="https://solo.to/notvc" class="themakerid" target="_blank" rel="noopener noreferrer">NOTVC</a></p>
     </div>
 </footer>
+<button id="back-to-top" aria-label="Back to top">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
 <script src="../JS/script.js"></script>
 </body>
 </html>
