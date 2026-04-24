@@ -64,7 +64,7 @@ LOVELY K OUTFITS/
 │   ├── index.html           # Main homepage
 │   ├── menclothes.html      # Men's category page
 │   ├── womenclothes.html    # Women's category page
-│   ├── accesories.html      # Accessories category page
+│   ├── accesories.html     # Accessories category page
 │   ├── shoes.html           # Shoes category page
 │   └── hair.html            # Hair products category page
 ├── JS/

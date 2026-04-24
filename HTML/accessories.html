@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: https:; frame-src https://www.google.com;">
     <link rel="icon" type="image/png" href="../PICS/icons8-shop-50.png">
-    <title>HAIR | LOVELY K OUTFITS</title>
+    <title>ACCESSORIES | LOVELY K OUTFITS</title>
     <link rel="stylesheet" href="../CSS/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -26,7 +26,7 @@
             <ul class="nav-links" id="nav-list">
                 <li><a href="menclothes.html">MEN CLOTHES</a></li>
                 <li><a href="womenclothes.html">WOMEN CLOTHES</a></li>
-                <li><a href="accessories.html">ACCESSORIES</a></li>
+                <li><a href="accesories.html">ACCESORIES</a></li>
                 <li><a href="shoes.html">SHOES</a></li>
                 <li><a href="hair.html">HAIR</a></li>
             </ul>
@@ -72,8 +72,8 @@
 
     <section class="products-section">
         <div class="product-header">
-            <h2 class="reveal reveal-delay-1">HAIR COLLECTION</h2>
-            <h3 class="reveal reveal-delay-2">Premium Quality Hair Extensions & Products</h3>
+            <h2 class="reveal reveal-delay-1">ACCESSORIES COLLECTION</h2>
+            <h3 class="reveal reveal-delay-2">Complete Your Perfect Look</h3>
         </div>
         <div class="product-grid" id="product-container"></div>
     </section>
@@ -91,20 +91,22 @@
                 <a href="menclothes.html">Men Clothes</a>
                 <a href="womenclothes.html">Women Clothes</a>
                 <a href="hair.html">Hair Products</a>
-                <a href="accessories.html">Accessories</a>
+                <a href="accesories.html">Accessories</a>
                 <a href="shoes.html">Shoes</a>
             </div>
             <div class="footer-links">
                 <h4>SUPPORT</h4>
                 <a href="#contact-section">Contact Us</a>
                 <a href="#about-section">About Us</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
             </div>
             <div class="footer-socials">
                 <h4>FOLLOW US</h4>
                 <div class="social-icons">
-                    <a href="https://wa.me/2348000000000" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i></a>
-                    <a href="https://facebook.com/lovelykoutfits" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="https://instagram.com/lovelykoutfits" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://wa.me/2348000000000" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="https://facebook.com/lovelykoutfits" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://instagram.com/lovelykoutfits" target="_blank"><i class="fa-brands fa-instagram"></i></a>
                 </div>
             </div>
         </div>
@@ -118,10 +120,10 @@
 
     <script src="../JS/script.js"></script>
     <script>
-        // Filter to show only hair products
+        // Filter to show only accessories products
         document.addEventListener('DOMContentLoaded', () => {
-            const hairProducts = products.filter(p => p.category === 'hair');
-            renderProducts(hairProducts, hairProducts.length);
+            const accessoryProducts = products.filter(p => p.category === 'accessories');
+            renderProducts(accessoryProducts, accessoryProducts.length);
         });
     </script>
 </body>
