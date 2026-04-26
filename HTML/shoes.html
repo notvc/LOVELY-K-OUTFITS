@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; frame-src https://www.google.com;">
     <link rel="icon" type="image/png" href="../PICS/icons8-shop-50.png">
     <title>SHOES | LOVELY K OUTFITS</title>
     <link rel="stylesheet" href="../CSS/style.css">
@@ -95,22 +96,22 @@
             </div>
             <div class="footer-links">
                 <h4>SUPPORT</h4>
-                <a href="#contact-section">Contact Us</a>
-                <a href="#about-section">About Us</a>
+                <a href="index.html#contact-section">Contact Us</a>
+                <a href="index.html#about-section">About Us</a>
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms & Conditions</a>
             </div>
             <div class="footer-socials">
                 <h4>FOLLOW US</h4>
                 <div class="social-icons">
-                    <a href="https://wa.me/2348000000000" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
-                    <a href="https://facebook.com/lovelykoutfits" target="_blank"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="https://instagram.com/lovelykoutfits" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://wa.me/2347010773974" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="https://www.facebook.com/share/18VG8R9SjG" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/lovely__k_outfits" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i></a>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 LOVELY K OUTFITS & HAIR. All rights reserved. | Made with <span style="color: var(--PEACH);">❤</span> by <span class="themakerid">The Maker ID</span></p>
+            <p>&copy; 2026 LOVELY K OUTFITS & HAIR. All Rights Reserved. | Made by <a href="https://solo.to/notvc" class="themakerid" target="_blank" rel="noopener noreferrer">NOTVC</a></p>
         </div>
     </footer>
 
@@ -122,6 +123,7 @@
         // Filter to show only shoes products
         document.addEventListener('DOMContentLoaded', () => {
             const shoeProducts = products.filter(p => p.category === 'shoes');
+            window.currentPageProducts = shoeProducts;
             renderProducts(shoeProducts, shoeProducts.length);
         });
     </script>

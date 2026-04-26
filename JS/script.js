@@ -157,7 +157,14 @@ checkoutBtn.addEventListener('click', () => {
     }
     
     // Construct WhatsApp Message with specific clothing info for further discussion
-    let message = "🛍️ *NEW ORDER INQUIRY - LOVELY K OUTFITS*\n\n";
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+    let message = "🛍️ *NEW ORDER INQUIRY - LOVELY K OUTFITS*\n";
+    message += `📅 *Date:* ${dateStr}\n`;
+    message += `⏰ *Time:* ${timeStr}\n`;
+    message += `-----------------------------------\n\n`;
     message += "Hello! I am interested in the following items and would like to talk more about them here:\n\n";
     
     cart.forEach(item => {
@@ -166,10 +173,13 @@ checkoutBtn.addEventListener('click', () => {
     });
     
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    message += `-----------------------------------\n`;
     message += `💰 *TOTAL ESTIMATE: ₦${total.toLocaleString()}*\n\n`;
+    message += `🚚 *Delivery Address:* [Please type your address here]\n`;
+    message += `📞 *Alternate Phone:* [Optional]\n\n`;
     message += "Please let me know if these are available so we can discuss delivery. Thank you!";
 
-    const whatsappNumber = "2348000000000"; // REPLACE with your actual business WhatsApp number
+    const whatsappNumber = "2347010773974"; // REPLACE with your actual business WhatsApp number
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     
     window.open(whatsappUrl, '_blank');
@@ -180,43 +190,34 @@ checkoutBtn.addEventListener('click', () => {
     closeCartAnimated(); // Hide modal after checkout
 });
 
-// Scroll Reveal
+// Scroll Reveal - FIXED: No fade out, only fade in once to prevent animation glitch on fast scroll
 const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-        let delay = 0;
-        const delayMatch = entry.target.className.match(/reveal-delay-(\d+)/);
-        if (delayMatch) {
-            delay = parseInt(delayMatch[1]) * 80;
-        }
-
-        if (entry.isIntersecting) {
-            if (!entry.target.classList.contains('visible')) {
-                entry.target.classList.add('visible'); // Add 'visible' class
-                
-                entry.target.animate([
-                    { opacity: 0, transform: 'translateY(20px)' },
-                    { opacity: 1, transform: 'translateY(0)' }
-                ], {
-                    duration: 1500,
-                    delay: delay,
-                    easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-                    fill: 'forwards'
-                });
-            } 
-        } else {
-            // Fade out when element leaves viewport
-            if (entry.target.classList.contains('visible')) {
-                entry.target.classList.remove('visible'); // Remove class
-                
-                entry.target.animate([
-                    { opacity: 1, transform: 'translateY(0)' },
-                    { opacity: 0, transform: 'translateY(20px)' }
-                ], {
-                    duration: 1500,
-                    easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-                    fill: 'forwards'
-                });
+        // Only animate IN, never animate out - prevents glitch on fast scroll
+        if (entry.isIntersecting && !entry.target.classList.contains('visible')) {
+            let delay = 0;
+            const delayMatch = entry.target.className.match(/reveal-delay-(\d+)/);
+            if (delayMatch) {
+                delay = parseInt(delayMatch[1]) * 80;
             }
+
+            entry.target.classList.add('visible'); // Add 'visible' class
+            entry.target.style.willChange = 'opacity, transform'; // Optimize animation performance
+            
+            entry.target.animate([
+                { opacity: 0, transform: 'translateY(20px)' },
+                { opacity: 1, transform: 'translateY(0)' }
+            ], {
+                duration: 1200,
+                delay: delay,
+                easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                fill: 'forwards'
+            });
+            
+            // Remove will-change after animation completes to prevent memory issues
+            setTimeout(() => {
+                entry.target.style.willChange = 'auto';
+            }, 1200 + delay);
         }
     });
 }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
@@ -252,7 +253,8 @@ function observeRevealElements() {
             (el.closest('.category-card') && el !== el.closest('.category-card')) ||
             (el.closest('.testimonial-card') && el !== el.closest('.testimonial-card')) ||
             (el.closest('.logo') && el !== el.closest('.logo')) ||
-            el.classList.contains('typing-cursor')
+            el.classList.contains('typing-cursor') ||
+            el.closest('.footer-bottom')
         ) {
             return;
         }
@@ -314,9 +316,9 @@ let itemsToShow = getInitialItemCount();
 let allItemsShown = false;
 
 // Function to render products
-function renderProducts(dataList, count, isSearch = false, searchTerm = "") {
+function renderProducts(sourceList, count, isSearch = false, searchTerm = "") {
     productContainer.innerHTML = '';
-    if (dataList.length === 0) {
+    if (sourceList.length === 0) {
         productContainer.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 60px; color: var(--text-main); font-style: italic;">
                 No products found matching your search...
@@ -324,7 +326,7 @@ function renderProducts(dataList, count, isSearch = false, searchTerm = "") {
         return;
     }
 
-    dataList.slice(0, count).forEach((product, index) => {
+    sourceList.slice(0, count).forEach((product, index) => {
         const card = document.createElement('div');
         card.classList.add('product-card');
         card.setAttribute('data-category', product.category);
@@ -399,7 +401,7 @@ function renderProducts(dataList, count, isSearch = false, searchTerm = "") {
     observeRevealElements(); // Observe newly rendered products
     
     // Add "Show More" or "Show Less" button (disabled during search)
-    if (!isSearch && (count < dataList.length || allItemsShown)) {
+    if (!isSearch && (count < sourceList.length || allItemsShown)) {
         const showMoreBtn = document.createElement('div');
         showMoreBtn.style.gridColumn = '1 / -1';
         showMoreBtn.style.textAlign = 'center';
@@ -441,17 +443,14 @@ function renderProducts(dataList, count, isSearch = false, searchTerm = "") {
                 // Show Less: Return to initial count
                 itemsToShow = getInitialItemCount();
                 allItemsShown = false;
-                renderProducts(products, itemsToShow);
-                observeRevealElements();
-            } else if (window.innerWidth >= 768) {
-                // Desktop: Show all remaining items
-                itemsToShow = products.length;
-                allItemsShown = true;
-                renderProducts(products, itemsToShow);
+                renderProducts(sourceList, itemsToShow);
                 observeRevealElements();
             } else {
-                // Mobile: Navigate to products page
-                window.location.href = 'products.html';
+                // Show all remaining items
+                itemsToShow = sourceList.length;
+                allItemsShown = true;
+                renderProducts(sourceList, itemsToShow);
+                observeRevealElements();
             }
         };
         
@@ -511,9 +510,11 @@ categoryCards.forEach(card => {
                         if (category === 'all') {
                             itemsToShow = getInitialItemCount();
                             allItemsShown = false;
-                            renderProducts(products, itemsToShow);
+                            window.currentPageProducts = products;
+                            renderProducts(window.currentPageProducts, itemsToShow);
                         } else {
                             const filtered = products.filter(p => p.category === category);
+                            window.currentPageProducts = filtered;
                             renderProducts(filtered, filtered.length);
                         }
 
@@ -529,7 +530,8 @@ categoryCards.forEach(card => {
 });
 
 // Initial render
-renderProducts(products, itemsToShow);
+window.currentPageProducts = window.currentPageProducts || products;
+renderProducts(window.currentPageProducts, itemsToShow);
 
 // Typing Effect
 const typingTarget = document.querySelector('.product-header h3');
@@ -575,7 +577,7 @@ window.addEventListener('resize', function() {
         const newCount = getInitialItemCount();
         if (newCount !== itemsToShow) {
             itemsToShow = newCount;
-            renderProducts(products, itemsToShow);
+            renderProducts(window.currentPageProducts, itemsToShow);
         }
     }
 });
@@ -588,7 +590,7 @@ if (searchInput) {
         const header = document.querySelector('.product-header h2');
         
         // Filter products: Only show items matching the specific keyword in name, description, or category
-        const filteredProducts = products.filter(product => 
+        const filteredProducts = window.currentPageProducts.filter(product => 
             product.name.toLowerCase().includes(searchTerm) || 
             product.description.toLowerCase().includes(searchTerm) ||
             product.category.toLowerCase().includes(searchTerm)
@@ -598,7 +600,7 @@ if (searchInput) {
             if (header) header.textContent = "FEATURED COLLECTION";
             allItemsShown = false;
             itemsToShow = getInitialItemCount();
-            renderProducts(products, itemsToShow);
+            renderProducts(window.currentPageProducts, itemsToShow);
         } else {
             if (header) header.textContent = `SEARCH RESULTS: "${searchTerm.toUpperCase()}"`;
             renderProducts(filteredProducts, filteredProducts.length, true, searchTerm);

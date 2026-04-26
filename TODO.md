@@ -6,8 +6,6 @@
 - [x] **Animation Timing Optimization:** Dialed in fade animations to a smooth 1.5s duration across the site.
 - [x] **Navbar Polish:** Added YouTube-style page transition bars, compact scrolling states, and fade animations.
 - [x] **Cross-Page Links & Footers:** Fixed `accessories.html` links across all files and injected the "Follow Us" social icons uniformly into the footer.
-
-
 ## 🛠️ Phase 1: Architecture & Refactoring (Current Backlog)
 - [ ] **Data Extraction:** Move the hardcoded `products` and `testimonials` arrays out of `script.js` into separate `data/products.json` and `data/testimonials.json` files and load them via `fetch()`.
 - [ ] **Component Abstraction (DRY Principle):** Write a JavaScript function to dynamically inject the Navbar and Footer HTML into all pages so you only have to edit them in one place.

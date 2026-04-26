@@ -15,6 +15,16 @@
     --sun-color: var(--text-main);
     --moon-color: var(--PEACH);
     --PEACH-surface: #FDA481;
+
+    /* Semantic Section Colors */
+    --about-bg: var(--LIGHTPEACH);
+    --testimonial-bg: var(--DARKPEACHPURPLE);
+    --testimonial-card-bg: var(--LIGHTPEACH);
+    --contact-bg: var(--DIMPEACH);
+    --btn-bg: var(--DARKRED);
+    --btn-text: var(--LIGHTPEACH);
+    --footer-bg: var(--text-main);
+    --footer-text: var(--nav-bg);
 }
 /* Repeat this block for every weight (Bold, Regular, etc.) you want to use */
 @font-face {
@@ -35,12 +45,24 @@
 [data-theme="dark"] {
     --bg-color: #190019;
     --nav-bg: #2D1B2D;
-    --text-main: #FDA481; /* PEACH */
+    --text-main: #FBE4D8; /* Softer text for reduced eye strain */
+    --TEXTCOLOR: #FFF5F0;
     --sun-color: #FDA481;
     --moon-color: #54162B;
     --card-bg: #2D1B2D;
-    --DIMPEACH:#54162B;
+    --DIMPEACH: #3A0F1E;
     --PEACH-surface: #54162B;
+    --DARKRED: #FDA481;
+
+    /* Semantic Section Colors */
+    --about-bg: #2D1B2D;
+    --testimonial-bg: #120012;
+    --testimonial-card-bg: #2D1B2D;
+    --contact-bg: #3A0F1E;
+    --btn-bg: var(--PEACH);
+    --btn-text: #190019;
+    --footer-bg: #0A000A;
+    --footer-text: #FBE4D8;
 }
 [data-theme="dark"] .search-container {
     background: var(--nav-bg);
@@ -564,7 +586,7 @@ img {
 }
 
 .category-header p {
-    color: var(--nav-bg);
+    color: var(--text-main);
     text-transform: uppercase;
     font-size: 0.8rem;
     letter-spacing: 3px;
@@ -587,6 +609,7 @@ img {
     transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
     background-color: var(--bg-color);
     border: 2px solid rgba(253, 164, 129, 0.1);
+    contain: layout style paint;
 }
 
 .card-bg {
@@ -699,7 +722,6 @@ img {
     .grid-container {
         grid-template-columns: repeat(2, 1fr);
     }
-    .grid-item { height: 350px; }
 }
 
 @media (max-width: 480px) {
@@ -731,7 +753,8 @@ img {
 
 .product-header h3 {
     font-family: 'Montserrat', sans-serif;
-    color: var(--nav-bg);
+    color: var(--text-main);
+    opacity: 0.8;
     font-weight: 300;
     text-transform: uppercase;
     font-size: 0.9rem;
@@ -757,6 +780,7 @@ img {
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    contain: layout style paint;
 }
 
 .product-image {
@@ -765,7 +789,6 @@ img {
     aspect-ratio: 3/4; /* Keeps all product photos uniform */
     overflow: hidden;
     background-color: var(--PEACH-surface);
-    position: relative;
 }
 
 /* Skeleton Shimmer Animation */
@@ -874,7 +897,7 @@ img {
 /* About Us */
 .about-section {
     padding: 100px 5%;
-    background-color: var(--LIGHTPEACH);
+    background-color: var(--about-bg);
     text-align: center;
 }
 .about-container h1 {
@@ -888,13 +911,13 @@ img {
     max-width: 800px;
     margin: 0 auto;
     line-height: 1.8;
-    color: var(--DARKPEACHPURPLE);
+    color: var(--text-main);
 }
 
 /* Testimonial Carousel */
 .testimonial-section {
     padding: 80px 5%;
-    background-color: var(--DARKPEACHPURPLE);
+    background-color: var(--testimonial-bg);
     overflow: hidden;
 }
 
@@ -921,7 +944,7 @@ img {
 }
 .testimonial-card {
     min-width: 300px; /* Fixed minimum width for stability */
-    background: var(--LIGHTPEACH);
+    background: var(--testimonial-card-bg);
     padding: 40px;
     border-radius: 8px;
     text-align: center;
@@ -929,9 +952,6 @@ img {
 }
 .testimonial-card p { font-style: italic; color: var(--text-main);}
 .testimonial-card h4 { margin-top: 20px; color: var(--RED); letter-spacing: 2px; }
-[data-theme="dark"] .testimonial-card p {
-    color: var(--PEACH);
-}
 
 /* Carousel Navigation Container */
 .carousel-nav {
@@ -984,7 +1004,7 @@ img {
 .contact-section {
     padding: 100px 5%;
     max-width: 100%;
-    background-color: var(--DIMPEACH); /* The main background color for the section */
+    background-color: var(--contact-bg);
     display: flex;
     justify-content: center;
 }
@@ -1015,7 +1035,7 @@ img {
     width: 100%;
     padding: 18px;
     /* Matches the div background exactly */
-    background-color: var(--DIMPEACH); 
+    background-color: var(--contact-bg); 
     /* Defined by a subtle border instead of a background change */
     border: 1px solid var(--bg-color); 
     border-radius: 4px;
@@ -1028,7 +1048,7 @@ img {
 /* Placeholder color for contrast */
 #contact-form input::placeholder,
 #contact-form textarea::placeholder {
-    color: var(--DARKPEACHPURPLE);
+    color: var(--text-main);
     opacity: 0.7;
 }
 
@@ -1042,22 +1062,22 @@ img {
 #contact-form textarea:focus {
     outline: none;
     border-color: var(--PEACH);
-    background-color: var(--DIMPEACH); /* Keeps it the same on focus */
+    background-color: var(--contact-bg);
     box-shadow: 0 0 10px rgba(253, 164, 129, 0.2);
 }
 
 .char-counter {
     text-align: right;
     font-size: 0.8rem;
-    color: var(--DARKPEACHPURPLE);
+    color: var(--text-main);
     margin-top: -15px;
     margin-bottom: 10px;
 }
 
 /* Submit Button styling */
 .submit-btn {
-    background-color: var(--DARKRED);
-    color: var(--LIGHTPEACH);
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
     padding: 20px;
     border: none;
     border-radius: 4px;
@@ -1078,9 +1098,9 @@ img {
 
 /* Footer Styling */
 .main-footer {
-    background-color: var(--text-main);
+    background-color: var(--footer-bg);
     max-width: 100%;
-    color: var(--nav-bg);
+    color: var(--footer-text);
     padding: 60px 5% 20px;
 }
 
@@ -1097,17 +1117,17 @@ img {
     margin-bottom: 15px;
 }
 
-.footer-links h4, .footer-socials h4 {
+.footer-links h4, .footer-socials h4, .footer-map h4 {
     font-size: 0.8rem;
     letter-spacing: 2px;
     margin-bottom: 20px;
-    color: var(--nav-bg);
+    color: var(--footer-text);
 }
 
 .footer-links a, .social-icons a {
     display: block;
     text-decoration: none;
-    color: var(--nav-bg);
+    color: var(--footer-text);
     margin-bottom: 10px;
     font-size: 0.9rem;
     transition: 0.3s;
@@ -1126,9 +1146,9 @@ img {
 }
 
 /* Specific Brand Colors */
-.fa-whatsapp { color: var(--nav-bg); }
-.fa-facebook { color: var(--nav-bg); }
-.fa-instagram { color: var(--nav-bg); }
+.fa-whatsapp { color: var(--footer-text); }
+.fa-facebook { color: var(--footer-text); }
+.fa-instagram { color: var(--footer-text); }
 
 /* Hover Effect */
 .social-icons a:hover {
@@ -1158,7 +1178,7 @@ img {
 
 .themakerid{
     text-decoration: underline;
-    color: var(--nav-bg);
+    color: var(--footer-text);
 }
 
 /* ==========================================================================
@@ -1167,7 +1187,7 @@ img {
 
 /* --- LARGE TABLETS (Max 1200px) --- */
 @media (max-width: 1024px) {
-    .category-grid {
+    .grid-container {
         grid-template-columns: repeat(2, 1fr);
     }
     .product-grid {
@@ -1324,11 +1344,8 @@ img {
 
     .about-container h1 { font-size: 2rem; }
 
-    .category-grid {
+    .grid-container {
         grid-template-columns: 1fr;
-    }
-    .grid-item {
-        height: 300px;
     }
     .product-grid {
         grid-template-columns: 1fr; /* Single column for very small screens */
@@ -1433,9 +1450,14 @@ img {
     background-color: var(--RED);
 }
 
-/* Scroll Reveal Animations */
+/* Scroll Reveal Animations - OPTIMIZED: No repeated animations on fast scroll */
 .reveal {
     opacity: 0;
+    contain: layout style paint;
+}
+
+.reveal.visible {
+    opacity: 1;
 }
 
 /* Blinking cursor for typing effect */
