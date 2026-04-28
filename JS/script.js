@@ -314,8 +314,12 @@ function observeRevealElements() {
 const productContainer = document.querySelector('#product-container');
 
 // Backend Integration Constants (Supabase Headless CMS)
-const SUPABASE_URL = 'YOUR_SUPABASE_URL_HERE'; // Replace with your Supabase Project URL
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE'; // Replace with your Supabase API Key
+const SUPABASE_URL = 'https://zhspnvguhegszmeoswja.supabase.co'; // Replace with your Supabase Project URL
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpoc3Budmd1aGVnc3ptZW9zd2phIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczMTQ4ODEsImV4cCI6MjA5Mjg5MDg4MX0.Rzw9BamFQ5hYANSJVJzFfB47fe0rvmirtj5xtqx6u44'; // Replace with your Supabase API Key
+
+// Initialize Supabase Client
+// Note: Make sure to include the Supabase CDN script in your HTML file before this script.
+const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 // Products Database with all categories (Local Fallback)
 const localProducts = [
@@ -579,14 +583,14 @@ async function initProducts() {
         if (SUPABASE_URL === 'YOUR_SUPABASE_URL_HERE') {
             throw new Error('Supabase not configured. Using local fallback products.');
         }
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*`, {
-            headers: {
-                'apikey': SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-            }
-        });
-        if (!response.ok) throw new Error('Failed to fetch products');
-        products = await response.json();
+        if (!supabase) {
+            throw new Error('Supabase library not loaded. Please add the CDN link to your HTML.');
+        }
+        
+        const { data, error } = await supabase.from('products').select('*');
+        
+        if (error) throw error;
+        products = data;
     } catch (error) {
         console.info(error.message);
         products = localProducts;
@@ -732,14 +736,14 @@ async function initTestimonials() {
         if (SUPABASE_URL === 'YOUR_SUPABASE_URL_HERE') {
             throw new Error('Supabase not configured. Using local fallback testimonials.');
         }
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/testimonials?select=*`, {
-            headers: {
-                'apikey': SUPABASE_ANON_KEY,
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-            }
-        });
-        if (!response.ok) throw new Error('Failed to fetch testimonials');
-        testimonials = await response.json();
+        if (!supabase) {
+            throw new Error('Supabase library not loaded. Please add the CDN link to your HTML.');
+        }
+        
+        const { data, error } = await supabase.from('testimonials').select('*');
+        
+        if (error) throw error;
+        testimonials = data;
     } catch (error) {
         console.info(error.message);
         testimonials = localTestimonials;
