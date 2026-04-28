@@ -40,9 +40,49 @@ document.body.appendChild(cartDropdown);
 
 function closeCartAnimated() {
     cartDropdown.classList.remove('open');
+    const cartModalContent = cartDropdown.querySelector('.cart-modal-content');
+    if (cartModalContent) cartModalContent.style.transform = '';
     setTimeout(() => {
         cartDropdown.style.display = 'none';
     }, 350);
+}
+
+// Swipe to dismiss for Cart (Mobile)
+const cartModalContent = cartDropdown.querySelector('.cart-modal-content');
+if (cartModalContent) {
+    let cartStartY = 0;
+    let cartCurrentY = 0;
+    let isCartDragging = false;
+
+    cartModalContent.addEventListener('touchstart', (e) => {
+        if (window.innerWidth > 768) return;
+        const scrollable = e.target.closest('.cart-items');
+        if (scrollable && scrollable.scrollTop > 0) return; // Allow normal scrolling
+        cartStartY = e.touches[0].clientY;
+        isCartDragging = true;
+        cartModalContent.style.transition = 'none'; // Remove CSS transition for smooth drag
+    }, { passive: true });
+
+    cartModalContent.addEventListener('touchmove', (e) => {
+        if (!isCartDragging) return;
+        cartCurrentY = e.touches[0].clientY;
+        const diffY = cartCurrentY - cartStartY;
+        if (diffY > 0) { // Only drag downwards
+            cartModalContent.style.transform = `translateY(${diffY}px)`;
+        }
+    }, { passive: true });
+
+    cartModalContent.addEventListener('touchend', () => {
+        if (!isCartDragging) return;
+        isCartDragging = false;
+        cartModalContent.style.transition = 'transform 0.35s ease-out';
+        const diffY = cartCurrentY - cartStartY;
+        if (diffY > 100) {
+            closeCartAnimated();
+        } else {
+            cartModalContent.style.transform = ''; // Snap back if threshold not met
+        }
+    });
 }
 
 // Close cart modal via overlay or close button
@@ -179,7 +219,7 @@ checkoutBtn.addEventListener('click', () => {
     message += `📞 *Alternate Phone:* [Optional]\n\n`;
     message += "Please let me know if these are available so we can discuss delivery. Thank you!";
 
-    const whatsappNumber = "2347010773974"; // REPLACE with your actual business WhatsApp number
+    const whatsappNumber = "2348036806640"; // REPLACE with your actual business WhatsApp number
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     
     window.open(whatsappUrl, '_blank');
@@ -273,8 +313,12 @@ function observeRevealElements() {
 // 2. New Product Generation Logic
 const productContainer = document.querySelector('#product-container');
 
-// Products Database with all categories
-const products = [
+// Backend Integration Constants (Supabase Headless CMS)
+const SUPABASE_URL = 'YOUR_SUPABASE_URL_HERE'; // Replace with your Supabase Project URL
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE'; // Replace with your Supabase API Key
+
+// Products Database with all categories (Local Fallback)
+const localProducts = [
     { name: "Silk Wrap Dress", price: "₦25,000", img: "../PICS/product1.jpg", badge: "New", description: "Luxurious silk wrap dress.", category: "women" },
     { name: "Vintage Denim", price: "₦18,500", img: "../PICS/product2.jpg", badge: "", description: "Classic vintage denim.", category: "men" },
     { name: "Gold Hoop Set", price: "₦5,000", img: "../PICS/product3.jpg", badge: "Sale", description: "Elegant gold hoop earrings.", category: "accessories" },
@@ -336,7 +380,7 @@ function renderProducts(sourceList, count, isSearch = false, searchTerm = "") {
 
         card.innerHTML = `
             <div class="product-image loading">
-                <img src="${escapeHTML(product.img)}" alt="${escapedName}" loading="lazy">
+                <img src="${escapeHTML(product.img)}" srcset="${escapeHTML(product.img)} 1x, ${escapeHTML(product.img.replace('.jpg', '-2x.jpg').replace('.png', '-2x.png'))} 2x" alt="${escapedName}" loading="lazy">
                 ${product.badge ? `<span class="badge">${escapeHTML(product.badge)}</span>` : ''}
             </div>
             <div class="product-info">
@@ -529,9 +573,28 @@ categoryCards.forEach(card => {
     });
 });
 
-// Initial render
-window.currentPageProducts = window.currentPageProducts || products;
-renderProducts(window.currentPageProducts, itemsToShow);
+let products = [];
+async function initProducts() {
+    try {
+        if (SUPABASE_URL === 'YOUR_SUPABASE_URL_HERE') {
+            throw new Error('Supabase not configured. Using local fallback products.');
+        }
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*`, {
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+            }
+        });
+        if (!response.ok) throw new Error('Failed to fetch products');
+        products = await response.json();
+    } catch (error) {
+        console.info(error.message);
+        products = localProducts;
+    }
+    window.currentPageProducts = products;
+    renderProducts(window.currentPageProducts, itemsToShow);
+}
+initProducts();
 
 // Typing Effect
 const typingTarget = document.querySelector('.product-header h3');
@@ -638,7 +701,7 @@ themeBtn.addEventListener('click', () => {
 });
 
 // 4. TESTIMONIAL GENERATION
-const testimonials = [
+const localTestimonials = [
     { text: "The hair quality is unmatched. I feel like a queen!", author: "Kemi A." },
     { text: "Best boutique in the city. The customer service is 10/10.", author: "Sandra O." },
     { text: "Lovely K transformed my wardrobe. Elegant and affordable.", author: "Joy I." },
@@ -661,26 +724,57 @@ const testimonials = [
     { text: "Quality, style, and affordability in one place? Lovely K nailed it!", author: "Zoe R." }
 ];
 
+let testimonials = [];
 const track = document.getElementById('testimonial-track');
 
-if (track) {
-    testimonials.forEach((item, index) => {
-        const card = document.createElement('div');
-        card.classList.add('testimonial-card', 'reveal', `reveal-delay-${(index % 5) + 1}`);
-        card.innerHTML = `
-            <p>"${escapeHTML(item.text)}"</p>
-            <h4>${escapeHTML(item.author)}</h4>
-        `;
-        track.appendChild(card);
-    });
-    observeRevealElements();
+async function initTestimonials() {
+    try {
+        if (SUPABASE_URL === 'YOUR_SUPABASE_URL_HERE') {
+            throw new Error('Supabase not configured. Using local fallback testimonials.');
+        }
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/testimonials?select=*`, {
+            headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+            }
+        });
+        if (!response.ok) throw new Error('Failed to fetch testimonials');
+        testimonials = await response.json();
+    } catch (error) {
+        console.info(error.message);
+        testimonials = localTestimonials;
+    }
+
+    if (track) {
+        testimonials.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.classList.add('testimonial-card', 'reveal', `reveal-delay-${(index % 5) + 1}`);
+            card.innerHTML = `
+                <p>"${escapeHTML(item.text)}"</p>
+                <h4>${escapeHTML(item.author)}</h4>
+            `;
+            track.appendChild(card);
+        });
+        observeRevealElements();
+        
+        // Re-initialize carousel after dynamic DOM injection
+        setTimeout(() => {
+            updateCarousel();
+            if (document.querySelector('.carousel-container')) {
+                stopCarousel();
+                startCarousel();
+            }
+        }, 300);
+    }
 }
+initTestimonials();
 
 // 5. CAROUSEL LOGIC
 // FIX 4: Rename carousel index variable to avoid collision
 let carouselIndex = 0;
 const nextBtn = document.querySelector('.next');
 const prevBtn = document.querySelector('.prev');
+let carouselInterval;
 
 function updateCarousel() {
     const cards = document.querySelectorAll('.testimonial-card');
@@ -695,6 +789,42 @@ function updateCarousel() {
         if(prevBtn) prevBtn.disabled = (carouselIndex === 0);
         if(nextBtn) nextBtn.disabled = (carouselIndex >= cards.length - visibleCards);
     }
+}
+
+function autoAdvanceCarousel() {
+    const cards = document.querySelectorAll('.testimonial-card');
+    const container = document.querySelector('.carousel-container');
+    if (!container || cards.length === 0) return;
+    
+    const containerWidth = container.offsetWidth;
+    const width = cards[0].offsetWidth + 20;
+    const visibleCards = Math.floor(containerWidth / width);
+    
+    if (carouselIndex < cards.length - visibleCards) {
+        carouselIndex++;
+    } else {
+        carouselIndex = 0; // Loop back to the start
+    }
+    updateCarousel();
+}
+
+function startCarousel() {
+    // Advances the carousel every 4 seconds
+    carouselInterval = setInterval(autoAdvanceCarousel, 4000);
+}
+
+function stopCarousel() {
+    clearInterval(carouselInterval);
+}
+
+const carouselContainer = document.querySelector('.carousel-container');
+if (carouselContainer) {
+    // Pause on hover
+    carouselContainer.addEventListener('mouseenter', stopCarousel);
+    carouselContainer.addEventListener('mouseleave', startCarousel);
+    // Pause on touch for mobile devices
+    carouselContainer.addEventListener('touchstart', stopCarousel, { passive: true });
+    carouselContainer.addEventListener('touchend', startCarousel, { passive: true });
 }
 
 if (nextBtn && prevBtn) {
@@ -720,7 +850,10 @@ if (nextBtn && prevBtn) {
 // Initialize carousel state
 window.addEventListener('load', () => {
     // Small timeout ensures CSS transitions and fonts are settled
-    setTimeout(updateCarousel, 300);
+    setTimeout(() => {
+        updateCarousel();
+        if (document.querySelector('.carousel-container')) startCarousel();
+    }, 300);
 });
 
 // 6. PRODUCT MODAL FUNCTIONALITY
@@ -752,6 +885,7 @@ function openProductModal(product) {
 
     const img = document.createElement('img');
     img.src = product.img;
+    img.srcset = `${product.img} 1x, ${product.img.replace('.jpg', '-2x.jpg').replace('.png', '-2x.png')} 2x`;
     img.alt = product.name;
     img.className = 'modal-img';
 
@@ -796,6 +930,40 @@ function openProductModal(product) {
     modalContent.appendChild(price);
     modalContent.appendChild(description);
     modalContent.appendChild(addBtn);
+
+    // Swipe to dismiss logic for Product Modal (Mobile)
+    let modalStartY = 0;
+    let modalCurrentY = 0;
+    let isModalDragging = false;
+
+    modalContent.addEventListener('touchstart', (e) => {
+        if (window.innerWidth > 768) return;
+        if (modalContent.scrollTop > 0) return; // Allow normal scrolling inside modal
+        modalStartY = e.touches[0].clientY;
+        isModalDragging = true;
+        modalContent.style.transition = 'none';
+    }, { passive: true });
+
+    modalContent.addEventListener('touchmove', (e) => {
+        if (!isModalDragging) return;
+        modalCurrentY = e.touches[0].clientY;
+        const diffY = modalCurrentY - modalStartY;
+        if (diffY > 0) {
+            modalContent.style.transform = `translateY(${diffY}px) scale(1)`;
+        }
+    }, { passive: true });
+
+    modalContent.addEventListener('touchend', () => {
+        if (!isModalDragging) return;
+        isModalDragging = false;
+        modalContent.style.transition = 'transform 0.35s ease-out';
+        const diffY = modalCurrentY - modalStartY;
+        if (diffY > 100) {
+            closeModal();
+        } else {
+            modalContent.style.transform = 'scale(1)'; // Snap back
+        }
+    });
 
     modal.appendChild(modalContent);
     document.body.appendChild(modal);
@@ -911,7 +1079,7 @@ if (contactForm) {
                 updateRateLimitUI();
         })
         .catch(err => {
-            alert('Oops! There was an issue sending your message. Please try again.');
+            showToast('Oops! There was an issue sending your message. Please try again.', 'error');
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
         });
@@ -1097,3 +1265,37 @@ window.addEventListener('scroll', () => {
         }
     }
 });
+
+// 10. TOAST NOTIFICATIONS
+function showToast(message, type = 'success') {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+    }
+    
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    const icon = type === 'success' ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-circle-exclamation"></i>';
+    
+    toast.innerHTML = `
+        <div class="toast-icon">${icon}</div>
+        <div class="toast-message">${escapeHTML(message)}</div>
+        <button class="toast-close">✕</button>
+    `;
+    
+    container.appendChild(toast);
+    
+    toast.offsetHeight; // Force reflow
+    toast.classList.add('show');
+    
+    const removeToast = () => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    };
+    
+    toast.querySelector('.toast-close').onclick = removeToast;
+    setTimeout(removeToast, 5000);
+}

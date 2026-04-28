@@ -129,12 +129,12 @@ Before deploying, you **must** replace all filler data with real business creden
 
 | Category | Variable / Constant | File | Recommended Action |
 | :--- | :--- | :--- | :--- |
-| **Checkout** | `whatsappNumber` | `JS/script.js` | Replace `"2348000000000"` with your actual business number. |
+| **Checkout** | `whatsappNumber` | `JS/script.js` | ✅ Completed (Configured to `2348036806640`). |
 | **Contact** | `form action` URL | `HTML/index.html` | Replace the Google Form `formResponse` URL with your own. |
 | **Contact** | `entry.ID` names | `HTML/index.html` | Match `entry.768668534` etc. with your Google Form field IDs. |
 | **Location** | `iframe src` | `HTML/index.html` | Embed your actual boutique location from Google Maps. |
 | **Inventory** | `products` array | `JS/script.js` | Replace mock objects with real product data and image paths. |
-| **Social** | `href="#"` | `HTML/*.html` | Update all footer social links (WhatsApp, Facebook, Instagram). |
+| **Social** | `href="#"` | `HTML/*.html` | ✅ Completed (Updated to real social profiles). |
 | **Feedback** | `testimonials` | `JS/script.js` | Replace placeholder text with real client reviews. |
 
 ---
