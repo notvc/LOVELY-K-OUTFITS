@@ -711,6 +711,13 @@ img {
     transform: translateY(-5px);
 }
 
+/* Center the Hair category on large screens (5 columns) */
+@media (min-width: 1201px) {
+    .category-card[data-category="hair"] {
+        grid-column: 3; 
+    }
+}
+
 /* Responsive */
 @media (max-width: 1200px) {
     .grid-container {
@@ -798,7 +805,8 @@ img {
 }
 
 .product-image.loading,
-.modal-img-wrapper.loading {
+.modal-img-wrapper.loading,
+.skeleton-text {
     background: linear-gradient(90deg, var(--DIMPEACH) 25%, var(--nav-bg) 50%, var(--DIMPEACH) 75%);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite linear;

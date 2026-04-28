@@ -1,3 +1,19 @@
+// ==========================================
+// 1. CRITICAL FAILSAFE: HIDE PRELOADER
+// ==========================================
+// Placed at the very top so it runs even if errors occur below
+const preloader = document.getElementById('preloader');
+if (preloader) {
+    // Absolute failsafe: Hide after 4 seconds regardless of anything
+    setTimeout(() => {
+        preloader.style.display = 'none';
+    }, 4000);
+    
+    window.addEventListener('load', () => {
+        setTimeout(() => { preloader.style.display = 'none'; }, 500);
+    });
+}
+
 const menu = document.querySelector('#mobile-menu');
 const menuLinks = document.querySelector('#nav-list');
 
@@ -15,7 +31,12 @@ document.querySelectorAll('.nav-links li a').forEach(link => {
 });
 
 // Shopping Cart System
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let cart = [];
+try {
+    cart = JSON.parse(localStorage.getItem('cart')) || [];
+} catch (e) {
+    console.warn("Local storage unavailable:", e);
+}
 const cartBtn = document.getElementById('cart-btn');
 const cartDropdown = document.getElementById('cart-dropdown');
 const cartItemsContainer = document.getElementById('cart-items');
@@ -131,7 +152,9 @@ function escapeHTML(str) {
 // Update cart display
 function updateCart() {
     // Save to localStorage
-    localStorage.setItem('cart', JSON.stringify(cart));
+    try {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    } catch (e) { /* Ignore file protocol errors */ }
 
     // Update count badge
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -319,41 +342,16 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 // Initialize Supabase Client
 // Note: Make sure to include the Supabase CDN script in your HTML file before this script.
-const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-
-// Products Database with all categories (Local Fallback)
-const localProducts = [
-    { name: "Silk Wrap Dress", price: "₦25,000", img: "../PICS/product1.jpg", badge: "New", description: "Luxurious silk wrap dress.", category: "women" },
-    { name: "Vintage Denim", price: "₦18,500", img: "../PICS/product2.jpg", badge: "", description: "Classic vintage denim.", category: "men" },
-    { name: "Gold Hoop Set", price: "₦5,000", img: "../PICS/product3.jpg", badge: "Sale", description: "Elegant gold hoop earrings.", category: "accessories" },
-    { name: "Leather Jacket", price: "₦35,000", img: "../PICS/product4.jpg", badge: "Hot", description: "Premium leather jacket.", category: "men" },
-    { name: "Elegant Blazer", price: "₦22,000", img: "../PICS/product5.jpg", badge: "", description: "Professional yet stylish blazer.", category: "women" },
-    { name: "Summer Shorts", price: "₦12,000", img: "../PICS/product6.jpg", badge: "", description: "Comfortable cotton shorts.", category: "men" },
-    { name: "Pearl Necklace", price: "₦8,500", img: "../PICS/product7.jpg", badge: "New", description: "Timeless pearl necklace.", category: "accessories" },
-    { name: "High-Waist Jeans", price: "₦16,000", img: "../PICS/product8.jpg", badge: "", description: "Flattering high-waist jeans.", category: "women" },
-    { name: "Satin Blouse", price: "₦14,000", img: "../PICS/product9.jpg", badge: "Sale", description: "Luxurious satin blouse.", category: "women" },
-    { name: "Designer Handbag", price: "₦45,000", img: "../PICS/product10.jpg", badge: "", description: "Luxury designer handbag.", category: "accessories" },
-    { name: "Floral Dress", price: "₦20,000", img: "../PICS/product11.jpg", badge: "", description: "Beautiful floral print dress.", category: "women" },
-    { name: "Wool Cardigan", price: "₦19,000", img: "../PICS/product12.jpg", badge: "New", description: "Cozy wool cardigan.", category: "women" },
-    { name: "Silk Scarf", price: "₦7,500", img: "../PICS/product13.jpg", badge: "", description: "Premium silk scarf.", category: "accessories" },
-    { name: "Wide-Leg Pants", price: "₦18,000", img: "../PICS/product14.jpg", badge: "", description: "Trendy wide-leg pants.", category: "women" },
-    { name: "Crop Top", price: "₦9,000", img: "../PICS/product15.jpg", badge: "Sale", description: "Stylish crop top.", category: "women" },
-    { name: "Linen Shirt", price: "₦13,500", img: "../PICS/product16.jpg", badge: "", description: "Breathable linen shirt.", category: "men" },
-    { name: "Midi Skirt", price: "₦15,000", img: "../PICS/product17.jpg", badge: "Hot", description: "Elegant midi skirt.", category: "women" },
-    { name: "Cashmere Sweater", price: "₦32,000", img: "../PICS/product18.jpg", badge: "", description: "Luxurious cashmere sweater.", category: "women" },
-    { name: "Cocktail Dress", price: "₦28,000", img: "../PICS/product19.jpg", badge: "New", description: "Sophisticated cocktail dress.", category: "women" },
-    { name: "Tailored Trousers", price: "₦17,000", img: "../PICS/product20.jpg", badge: "", description: "Professional tailored trousers.", category: "men" },
-    { name: "Classic Loafers", price: "₦28,000", img: "../PICS/shoes1.jpg", badge: "", description: "Sophisticated leather loafers.", category: "shoes" },
-    { name: "Stiletto Heels", price: "₦32,000", img: "../PICS/shoes2.jpg", badge: "Hot", description: "Elegant high heel stilettos.", category: "shoes" },
-    { name: "Sneaker Trainers", price: "₦24,000", img: "../PICS/shoes3.jpg", badge: "Sale", description: "Comfortable fashion sneakers.", category: "shoes" },
-    { name: "Ankle Boots", price: "₦29,500", img: "../PICS/shoes4.jpg", badge: "New", description: "Chic ankle length boots.", category: "shoes" },
-    { name: "Casual Slip-ons", price: "₦18,000", img: "../PICS/shoes5.jpg", badge: "", description: "Easy-to-wear slip-on shoes.", category: "shoes" },
-    { name: "Luxury Hair Extensions", price: "₦15,000", img: "../PICS/hair1.jpg", badge: "New", description: "Premium human hair extensions.", category: "hair" },
-    { name: "Wig Collection", price: "₦22,000", img: "../PICS/hair2.jpg", badge: "", description: "Beautiful lace front wigs.", category: "hair" },
-    { name: "Hair Growth Oil", price: "₦8,500", img: "../PICS/hair3.jpg", badge: "Sale", description: "Organic hair growth treatment.", category: "hair" },
-    { name: "Braiding Bundle", price: "₦12,000", img: "../PICS/hair4.jpg", badge: "Hot", description: "Quality synthetic braiding hair.", category: "hair" },
-    { name: "Hair Care Set", price: "₦11,000", img: "../PICS/hair5.jpg", badge: "", description: "Complete hair maintenance kit.", category: "hair" }
-];
+let supabaseClient = null;
+try {
+    if (window.supabase) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: { persistSession: false } // Fixes SecurityError when opening via file:// protocol
+        });
+    }
+} catch (e) {
+    console.error('Supabase initialization failed:', e);
+}
 
 // Determine initial items to show based on screen size
 function getInitialItemCount() {
@@ -377,14 +375,16 @@ function renderProducts(sourceList, count, isSearch = false, searchTerm = "") {
     sourceList.slice(0, count).forEach((product, index) => {
         const card = document.createElement('div');
         card.classList.add('product-card');
-        card.setAttribute('data-category', product.category);
+        card.setAttribute('data-category', product.category || 'all');
         card.style.cursor = 'pointer';
 
-        const escapedName = escapeHTML(product.name);
+        const escapedName = escapeHTML(product.name || 'Unnamed Product');
+        const safeImg = product.img || ''; // Prevent null reference errors
+        const srcsetImg = safeImg ? safeImg.replace('.jpg', '-2x.jpg').replace('.png', '-2x.png') : '';
 
         card.innerHTML = `
             <div class="product-image loading">
-                <img src="${escapeHTML(product.img)}" srcset="${escapeHTML(product.img)} 1x, ${escapeHTML(product.img.replace('.jpg', '-2x.jpg').replace('.png', '-2x.png'))} 2x" alt="${escapedName}" loading="lazy">
+                <img src="${escapeHTML(safeImg)}" srcset="${escapeHTML(safeImg)} 1x, ${escapeHTML(srcsetImg)} 2x" alt="${escapedName}" loading="lazy">
                 ${product.badge ? `<span class="badge">${escapeHTML(product.badge)}</span>` : ''}
             </div>
             <div class="product-info">
@@ -577,26 +577,64 @@ categoryCards.forEach(card => {
     });
 });
 
+// Function to render loading skeletons before Supabase fetch completes
+function renderProductSkeletons(count) {
+    if (!productContainer) return;
+    productContainer.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+        const skeletonCard = document.createElement('div');
+        skeletonCard.classList.add('product-card');
+        skeletonCard.style.pointerEvents = 'none'; // Prevent interactions
+        skeletonCard.innerHTML = `
+            <div class="product-image loading"></div>
+            <div class="product-info" style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px 5px;">
+                <div class="skeleton-text" style="width: 80%; height: 14px; border-radius: 4px;"></div>
+                <div class="skeleton-text" style="width: 40%; height: 14px; border-radius: 4px;"></div>
+            </div>
+        `;
+        productContainer.appendChild(skeletonCard);
+    }
+}
+
 let products = [];
 async function initProducts() {
+    // Show skeleton placeholders instantly
+    renderProductSkeletons(getInitialItemCount());
+    
     try {
         if (SUPABASE_URL === 'YOUR_SUPABASE_URL_HERE') {
-            throw new Error('Supabase not configured. Using local fallback products.');
+            throw new Error('Supabase not configured.');
         }
-        if (!supabase) {
+        if (!supabaseClient) {
             throw new Error('Supabase library not loaded. Please add the CDN link to your HTML.');
         }
         
-        const { data, error } = await supabase.from('products').select('*');
+        const { data, error } = await supabaseClient.from('products').select('*');
         
         if (error) throw error;
-        products = data;
+        products = data || [];
     } catch (error) {
-        console.info(error.message);
-        products = localProducts;
+        console.error('Failed to load products:', error.message);
+        products = [];
     }
-    window.currentPageProducts = products;
-    renderProducts(window.currentPageProducts, itemsToShow);
+    
+    // Smart detection using the actual file name instead of the page title
+    const currentPath = window.location.pathname.toLowerCase();
+    let pageCategory = null;
+    
+    if (currentPath.includes('hair.html')) pageCategory = 'hair';
+    else if (currentPath.includes('shoes.html')) pageCategory = 'shoes';
+    else if (currentPath.includes('womenclothes.html')) pageCategory = 'women';
+    else if (currentPath.includes('menclothes.html')) pageCategory = 'men';
+    else if (currentPath.includes('accessories.html') || currentPath.includes('accesories.html')) pageCategory = 'accessories';
+
+    if (pageCategory) {
+        window.currentPageProducts = products.filter(p => p.category === pageCategory);
+        renderProducts(window.currentPageProducts, window.currentPageProducts.length);
+    } else {
+        window.currentPageProducts = products;
+        renderProducts(window.currentPageProducts, itemsToShow);
+    }
 }
 initProducts();
 
@@ -678,7 +716,8 @@ if (searchInput) {
 // ... (Keep your mobile menu and product generation code at the top) ...
 
 const themeBtn = document.getElementById('theme-toggle');
-const currentTheme = localStorage.getItem('theme');
+let currentTheme = null;
+try { currentTheme = localStorage.getItem('theme'); } catch(e) {}
 
 // 1. DEFINE THE MISSING FUNCTION
 function applyThemeColors(theme) {
@@ -700,33 +739,11 @@ if (currentTheme) {
 themeBtn.addEventListener('click', () => {
     let theme = document.documentElement.getAttribute('data-theme');
     let newTheme = (theme === 'dark') ? 'light' : 'dark';
-    localStorage.setItem('theme', newTheme);
+    try { localStorage.setItem('theme', newTheme); } catch(e) {}
     applyThemeColors(newTheme);
 });
 
 // 4. TESTIMONIAL GENERATION
-const localTestimonials = [
-    { text: "The hair quality is unmatched. I feel like a queen!", author: "Kemi A." },
-    { text: "Best boutique in the city. The customer service is 10/10.", author: "Sandra O." },
-    { text: "Lovely K transformed my wardrobe. Elegant and affordable.", author: "Joy I." },
-    { text: "My go-to for accessories. Always on trend!", author: "Blessing T." },
-    { text: "The fabrics are so luxurious and the fits are perfect. Highly recommend!", author: "Zainab M." },
-    { text: "Every piece I've bought here has lasted forever. Quality never disappoints.", author: "Chioma E." },
-    { text: "Their women's collection is absolutely stunning. I can't stop buying!", author: "Amara K." },
-    { text: "The styling advice here is incredible. They really know fashion.", author: "Precious O." },
-    { text: "Best shoes in town. Comfortable AND fashionable. Rare combo!", author: "Nneka S." },
-    { text: "I got compliments on my outfit all day. Thanks, Lovely K!", author: "Tunde B." },
-    { text: "The men's clothing here is sleek and professional. Perfect for work.", author: "Seun A." },
-    { text: "Customer service is exceptional. They helped me find the perfect match.", author: "Blessing N." },
-    { text: "The pieces I bought are investment-worthy. So elegant and timeless.", author: "Funke I." },
-    { text: "Finally found a boutique that understands true style and quality.", author: "Ada C." },
-    { text: "The accessories collection is to die for. Every item is gorgeous!", author: "Oprah T." },
-    { text: "I felt like royalty shopping here. The entire experience was delightful.", author: "Grace M." },
-    { text: "Best-kept secret in fashion. Don't tell everyone, please!", author: "Ifeyinwa L." },
-    { text: "The attention to detail in every garment is remarkable. Worth every naira.", author: "Naja H." },
-    { text: "My sister and I both love shopping here. It's become our favorite spot.", author: "Yvonne P." },
-    { text: "Quality, style, and affordability in one place? Lovely K nailed it!", author: "Zoe R." }
-];
 
 let testimonials = [];
 const track = document.getElementById('testimonial-track');
@@ -734,19 +751,19 @@ const track = document.getElementById('testimonial-track');
 async function initTestimonials() {
     try {
         if (SUPABASE_URL === 'YOUR_SUPABASE_URL_HERE') {
-            throw new Error('Supabase not configured. Using local fallback testimonials.');
+            throw new Error('Supabase not configured.');
         }
-        if (!supabase) {
+        if (!supabaseClient) {
             throw new Error('Supabase library not loaded. Please add the CDN link to your HTML.');
         }
         
-        const { data, error } = await supabase.from('testimonials').select('*');
+        const { data, error } = await supabaseClient.from('testimonials').select('*');
         
         if (error) throw error;
-        testimonials = data;
+        testimonials = data || [];
     } catch (error) {
-        console.info(error.message);
-        testimonials = localTestimonials;
+        console.error('Failed to load testimonials:', error.message);
+        testimonials = [];
     }
 
     if (track) {
@@ -813,8 +830,9 @@ function autoAdvanceCarousel() {
 }
 
 function startCarousel() {
-    // Advances the carousel every 4 seconds
-    carouselInterval = setInterval(autoAdvanceCarousel, 4000);
+    stopCarousel(); // Prevent overlapping timers
+    // Advances the carousel every 6 seconds for comfortable reading
+    carouselInterval = setInterval(autoAdvanceCarousel, 6000);
 }
 
 function stopCarousel() {
@@ -822,13 +840,82 @@ function stopCarousel() {
 }
 
 const carouselContainer = document.querySelector('.carousel-container');
-if (carouselContainer) {
+if (carouselContainer && track) {
     // Pause on hover
     carouselContainer.addEventListener('mouseenter', stopCarousel);
     carouselContainer.addEventListener('mouseleave', startCarousel);
-    // Pause on touch for mobile devices
-    carouselContainer.addEventListener('touchstart', stopCarousel, { passive: true });
-    carouselContainer.addEventListener('touchend', startCarousel, { passive: true });
+    
+    // Touch swipe logic for mobile
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let isDragging = false;
+    let isScrolling = false;
+
+    carouselContainer.addEventListener('touchstart', (e) => {
+        stopCarousel();
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        currentX = startX;
+        isDragging = true;
+        isScrolling = false;
+        track.style.transition = 'none'; // Disable transition for 1:1 drag follow
+    }, { passive: true });
+
+    carouselContainer.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        currentX = e.touches[0].clientX;
+        const currentY = e.touches[0].clientY;
+        
+        // Detect if the user is scrolling vertically instead of swiping
+        if (Math.abs(currentY - startY) > Math.abs(currentX - startX) + 5) {
+            isScrolling = true;
+            isDragging = false;
+            track.style.transition = 'transform 0.5s ease-in-out';
+            updateCarousel(); // Snap back
+            return;
+        }
+
+        if (!isScrolling) {
+            const diffX = currentX - startX;
+            const cards = document.querySelectorAll('.testimonial-card');
+            if (cards.length > 0) {
+                const width = cards[0].offsetWidth + 20;
+                track.style.transform = `translateX(${-(carouselIndex * width) + diffX}px)`;
+            }
+        }
+    }, { passive: true });
+
+    carouselContainer.addEventListener('touchend', () => {
+        if (isScrolling) {
+            startCarousel();
+            return;
+        }
+        if (!isDragging) return;
+        isDragging = false;
+        track.style.transition = 'transform 0.5s ease-in-out'; // Restore transition
+        
+        const diffX = currentX - startX;
+        const cards = document.querySelectorAll('.testimonial-card');
+        
+        if (cards.length > 0) {
+            const width = cards[0].offsetWidth + 20;
+            const containerWidth = carouselContainer.offsetWidth;
+            const visibleCards = Math.floor(containerWidth / width);
+
+            if (Math.abs(diffX) > 50) { // 50px swipe threshold
+                if (diffX > 0) {
+                    // Swipe right (previous)
+                    carouselIndex = carouselIndex > 0 ? carouselIndex - 1 : Math.max(0, cards.length - visibleCards);
+                } else {
+                    // Swipe left (next)
+                    carouselIndex = carouselIndex < cards.length - visibleCards ? carouselIndex + 1 : 0;
+                }
+            }
+            updateCarousel();
+        }
+        startCarousel(); // Resume auto-slide
+    });
 }
 
 if (nextBtn && prevBtn) {
@@ -836,18 +923,32 @@ if (nextBtn && prevBtn) {
         const cards = document.querySelectorAll('.testimonial-card');
         const containerWidth = document.querySelector('.carousel-container').offsetWidth;
         const width = cards[0].offsetWidth + 20;
-        const visibleCards = Math.floor(containerWidth / width); // Use floor to be safe with partial cards
+        const visibleCards = Math.floor(containerWidth / width);
+        
         if (carouselIndex < cards.length - visibleCards) {
             carouselIndex++;
-            updateCarousel();
+        } else {
+            carouselIndex = 0; // Loop forward seamlessly
         }
+        updateCarousel();
+        stopCarousel();
+        startCarousel(); // Reset timer on manual navigation
     });
 
     prevBtn.addEventListener('click', () => {
+        const cards = document.querySelectorAll('.testimonial-card');
+        const containerWidth = document.querySelector('.carousel-container').offsetWidth;
+        const width = cards[0].offsetWidth + 20;
+        const visibleCards = Math.floor(containerWidth / width);
+        
         if (carouselIndex > 0) {
             carouselIndex--;
-            updateCarousel();
+        } else {
+            carouselIndex = Math.max(0, cards.length - visibleCards); // Loop backward seamlessly
         }
+        updateCarousel();
+        stopCarousel();
+        startCarousel(); // Reset timer on manual navigation
     });
 }
 
@@ -1187,45 +1288,6 @@ if (backToTopBtn) {
     backToTopBtn.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-}
-
-// Full Page Preloader Logic
-const preloader = document.getElementById('preloader');
-let pageLoaded = false;
-let minDisplayTimeElapsed = false;
-
-// Function to hide the preloader
-function hidePreloader() {
-    if (preloader && pageLoaded && minDisplayTimeElapsed) {
-        preloader.classList.add('preloader-hidden');
-        setTimeout(() => {
-            preloader.style.display = 'none';
-        }, 500);
-    }
-}
-
-if (preloader) {
-    // Ensure preloader is displayed for a minimum time (e.g., 600ms)
-    setTimeout(() => {
-        minDisplayTimeElapsed = true;
-        hidePreloader();
-    }, 600);
-
-    // Hide preloader once all assets are loaded
-    window.addEventListener('load', () => {
-        pageLoaded = true;
-        hidePreloader();
-    }
-);
-
-    // Fallback: Hide preloader after a maximum time, even if window.load doesn't fire
-    // This prevents the spinner from getting stuck indefinitely due to a broken asset.
-    setTimeout(() => {
-        if (!preloader.classList.contains('preloader-hidden')) {
-            preloader.classList.add('preloader-hidden');
-            console.warn('Preloader hidden by fallback timeout. Check for slow-loading or broken assets.');
-        }
-    }, 10000); // Hide after 10 seconds maximum
 }
 
 // Page Transition
