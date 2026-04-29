@@ -122,8 +122,10 @@ function addToCart(product) {
     } else {
         cart.push({
             name: product.name,
-            price: parseInt(product.price.replace(/[^0-9]/g, '')),
+            // Safely parse price to integer whether it's stored as a string or number
+            price: parseInt(String(product.price || '0').replace(/[^0-9]/g, ''), 10) || 0,
             img: product.img,
+            instagram_url: product.instagram_url,
             quantity: 1
         });
     }
@@ -139,6 +141,9 @@ function addToCart(product) {
         duration: 400,
         easing: 'cubic-bezier(0.16, 1, 0.3, 1)'
     });
+    
+    // Provide visual feedback
+    showToast(`${product.name || 'Item'} added to cart!`, 'success');
 }
 
 // Helper function to sanitize HTML to prevent XSS
@@ -219,6 +224,56 @@ checkoutBtn.addEventListener('click', () => {
         return;
     }
     
+    showCheckoutModal();
+});
+
+function showCheckoutModal() {
+    const modal = document.createElement('div');
+    modal.className = 'product-modal-overlay';
+    modal.style.opacity = '0';
+    modal.style.transition = 'opacity 0.35s ease-out';
+    modal.style.zIndex = '9999'; // Ensures it appears above the cart dropdown
+    
+    modal.innerHTML = `
+        <div class="product-modal-content" style="transform: scale(0.92); transition: transform 0.35s ease-out; text-align: center;">
+            <button class="modal-close">✕</button>
+            <h2 class="modal-title">DELIVERY DETAILS</h2>
+            <p class="modal-description" style="margin-bottom: 20px;">Please enter your details to complete the order via WhatsApp.</p>
+            
+            <div style="text-align: left;">
+                <input type="text" id="checkout-name" class="checkout-input" placeholder="Full Name *" required>
+                <textarea id="checkout-address" class="checkout-input" placeholder="Delivery Address *" rows="3" required style="resize: vertical;"></textarea>
+                <input type="tel" id="checkout-phone" class="checkout-input" placeholder="Alternate Phone Number (Optional)">
+            </div>
+            
+            <button class="checkout-btn confirm-checkout-btn" style="margin-top: 10px;">PROCEED TO WHATSAPP</button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    modal.offsetHeight; // reflow
+    modal.style.opacity = '1';
+    modal.querySelector('.product-modal-content').style.transform = 'scale(1)';
+    
+    const closeModal = () => {
+        modal.style.opacity = '0';
+        modal.querySelector('.product-modal-content').style.transform = 'scale(0.92)';
+        setTimeout(() => modal.remove(), 350);
+    };
+    
+    modal.querySelector('.modal-close').onclick = closeModal;
+    modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+    
+    modal.querySelector('.confirm-checkout-btn').onclick = () => {
+        const name = document.getElementById('checkout-name').value.trim();
+        const address = document.getElementById('checkout-address').value.trim();
+        const phone = document.getElementById('checkout-phone').value.trim();
+        
+        if (!name || !address) {
+            showToast('Please provide your name and delivery address.', 'error');
+            return;
+        }
+
     // Construct WhatsApp Message with specific clothing info for further discussion
     const now = new Date();
     const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
@@ -232,14 +287,20 @@ checkoutBtn.addEventListener('click', () => {
     
     cart.forEach(item => {
         const subtotal = item.price * item.quantity;
-        message += `📍 *${item.name}*\n   Quantity: ${item.quantity} | Price: ₦${item.price.toLocaleString()}\n   Subtotal: ₦${subtotal.toLocaleString()}\n\n`;
+        message += `📍 *${item.name}*\n`;
+        message += `   Quantity: ${item.quantity} | Price: ₦${item.price.toLocaleString()}\n`;
+        message += `   Subtotal: ₦${subtotal.toLocaleString()}\n`;
+        if (item.instagram_url) message += `   Instagram Link: ${item.instagram_url}\n`;
+        message += `\n`;
     });
     
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     message += `-----------------------------------\n`;
     message += `💰 *TOTAL ESTIMATE: ₦${total.toLocaleString()}*\n\n`;
-    message += `🚚 *Delivery Address:* [Please type your address here]\n`;
-    message += `📞 *Alternate Phone:* [Optional]\n\n`;
+    message += `👤 *Customer Name:* ${name}\n`;
+    message += `🚚 *Delivery Address:* ${address}\n`;
+    if (phone) message += `📞 *Alternate Phone:* ${phone}\n\n`;
+    else message += `\n`;
     message += "Please let me know if these are available so we can discuss delivery. Thank you!";
 
     const whatsappNumber = "2348036806640"; // REPLACE with your actual business WhatsApp number
@@ -250,8 +311,10 @@ checkoutBtn.addEventListener('click', () => {
     cart = [];
     localStorage.removeItem('cart');
     updateCart();
+        closeModal();
     closeCartAnimated(); // Hide modal after checkout
-});
+    };
+}
 
 // Scroll Reveal - FIXED: No fade out, only fade in once to prevent animation glitch on fast scroll
 const revealObserver = new IntersectionObserver((entries) => {
@@ -364,6 +427,7 @@ let allItemsShown = false;
 // Function to render products
 function renderProducts(sourceList, count, isSearch = false, searchTerm = "") {
     productContainer.innerHTML = '';
+
     if (sourceList.length === 0) {
         productContainer.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 60px; color: var(--text-main); font-style: italic;">
@@ -382,9 +446,12 @@ function renderProducts(sourceList, count, isSearch = false, searchTerm = "") {
         const safeImg = product.img || ''; // Prevent null reference errors
         const srcsetImg = safeImg ? safeImg.replace('.jpg', '-2x.jpg').replace('.png', '-2x.png') : '';
 
+        const playIconHtml = product.instagram_url ? `<div class="play-icon-overlay"><i class="fa-solid fa-play"></i></div>` : '';
+
         card.innerHTML = `
             <div class="product-image loading">
                 <img src="${escapeHTML(safeImg)}" srcset="${escapeHTML(safeImg)} 1x, ${escapeHTML(srcsetImg)} 2x" alt="${escapedName}" loading="lazy">
+                ${playIconHtml}
                 ${product.badge ? `<span class="badge">${escapeHTML(product.badge)}</span>` : ''}
             </div>
             <div class="product-info">
@@ -423,11 +490,23 @@ function renderProducts(sourceList, count, isSearch = false, searchTerm = "") {
         // Handle image fade-in after load
         const img = card.querySelector('img');
         const container = card.querySelector('.product-image');
+        
+        if (!safeImg) {
+            img.src = 'https://via.placeholder.com/400x533/FBE4D8/54162B?text=LOVELY+K';
+            img.srcset = '';
+        }
+
         if (img.complete) {
             img.classList.add('loaded');
             container.classList.remove('loading');
         } else {
             img.addEventListener('load', () => {
+                img.classList.add('loaded');
+                container.classList.remove('loading');
+            });
+            // Failsafe: if the image is blocked or broken, show the placeholder
+            img.addEventListener('error', () => {
+                img.src = 'https://via.placeholder.com/400x533/FBE4D8/54162B?text=LOVELY+K';
                 img.classList.add('loaded');
                 container.classList.remove('loading');
             });
@@ -563,7 +642,8 @@ categoryCards.forEach(card => {
                         } else {
                             const filtered = products.filter(p => p.category === category);
                             window.currentPageProducts = filtered;
-                            renderProducts(filtered, filtered.length);
+                            itemsToShow = getInitialItemCount();
+                            renderProducts(filtered, itemsToShow);
                         }
 
                         // Smooth Fade In for Grid
@@ -630,7 +710,8 @@ async function initProducts() {
 
     if (pageCategory) {
         window.currentPageProducts = products.filter(p => p.category === pageCategory);
-        renderProducts(window.currentPageProducts, window.currentPageProducts.length);
+        itemsToShow = getInitialItemCount();
+        renderProducts(window.currentPageProducts, itemsToShow);
     } else {
         window.currentPageProducts = products;
         renderProducts(window.currentPageProducts, itemsToShow);
@@ -682,7 +763,9 @@ window.addEventListener('resize', function() {
         const newCount = getInitialItemCount();
         if (newCount !== itemsToShow) {
             itemsToShow = newCount;
-            renderProducts(window.currentPageProducts, itemsToShow);
+            if (window.currentPageProducts) {
+                renderProducts(window.currentPageProducts, itemsToShow);
+            }
         }
     }
 });
@@ -988,23 +1071,58 @@ function openProductModal(product) {
     const imgWrapper = document.createElement('div');
     imgWrapper.className = 'modal-img-wrapper loading';
 
-    const img = document.createElement('img');
-    img.src = product.img;
-    img.srcset = `${product.img} 1x, ${product.img.replace('.jpg', '-2x.jpg').replace('.png', '-2x.png')} 2x`;
-    img.alt = product.name;
-    img.className = 'modal-img';
+    let hasIgEmbed = false;
+    if (product.instagram_url) {
+        const match = product.instagram_url.match(/\/(p|reel)\/([a-zA-Z0-9_-]+)/);
+        if (match && match[1] && match[2]) {
+            hasIgEmbed = true;
+            const postType = match[1];
+            const postId = match[2];
+            
+            const spinnerWrapper = document.createElement('div');
+            spinnerWrapper.className = 'iframe-spinner-wrapper';
+            const spinner = document.createElement('div');
+            spinner.className = 'spinner';
+            spinner.style.width = '40px';
+            spinner.style.height = '40px';
+            spinner.style.borderWidth = '3px';
+            spinnerWrapper.appendChild(spinner);
+            imgWrapper.appendChild(spinnerWrapper);
 
-    // Handle image fade-in after load
-    if (img.complete) {
-        img.classList.add('loaded');
-        imgWrapper.classList.remove('loading');
-    } else {
-        img.addEventListener('load', () => {
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.instagram.com/${postType}/${postId}/embed`;
+            iframe.setAttribute('frameborder', '0');
+            iframe.setAttribute('allowfullscreen', '');
+            
+            iframe.onload = () => {
+                imgWrapper.classList.remove('loading');
+                spinnerWrapper.remove();
+                iframe.classList.add('loaded');
+            };
+            
+            imgWrapper.appendChild(iframe);
+        }
+    }
+
+    if (!hasIgEmbed) {
+        const img = document.createElement('img');
+        img.src = product.img || 'https://via.placeholder.com/400x533/FBE4D8/54162B?text=LOVELY+K';
+        img.srcset = product.img ? `${product.img} 1x, ${product.img.replace('.jpg', '-2x.jpg').replace('.png', '-2x.png')} 2x` : '';
+        img.alt = product.name;
+        img.className = 'modal-img';
+
+        // Handle image fade-in after load
+        if (img.complete) {
             img.classList.add('loaded');
             imgWrapper.classList.remove('loading');
-        });
+        } else {
+            img.addEventListener('load', () => {
+                img.classList.add('loaded');
+                imgWrapper.classList.remove('loading');
+            });
+        }
+        imgWrapper.appendChild(img);
     }
-    imgWrapper.appendChild(img);
 
     const title = document.createElement('h2');
     title.textContent = product.name;

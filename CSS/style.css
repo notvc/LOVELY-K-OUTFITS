@@ -551,6 +551,26 @@ img {
     color: var(--PEACH);
 }
 
+/* Checkout Input Styling */
+.checkout-input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 15px;
+    background-color: transparent;
+    border: 1px solid var(--PEACH);
+    border-radius: 6px;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.checkout-input:focus {
+    outline: none;
+    border-color: var(--RED);
+    box-shadow: 0 0 10px rgba(253, 164, 129, 0.3);
+}
+
 /* --- Desktop Styles --- */
 .menu-toggle {
     display: none; /* Hidden on desktop */
@@ -841,6 +861,32 @@ img {
     text-transform: uppercase;
 }
 
+/* Instagram Play Icon Overlay */
+.play-icon-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 48px;
+    height: 48px;
+    background-color: rgba(25, 0, 25, 0.5);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 4px; /* Visually centers the play triangle */
+    font-size: 1.1rem;
+    opacity: 0;
+    pointer-events: none; /* Allows clicks to pass through to the card */
+    transition: all 0.4s ease;
+    z-index: 5;
+}
+
+.product-image:not(.loading) .play-icon-overlay {
+    opacity: 0.8;
+}
+
 /* Info Section */
 .product-info {
     padding: 15px 5px;
@@ -868,6 +914,12 @@ img {
 
 .product-card:hover img {
     transform: scale(1.07);
+}
+
+.product-card:hover .product-image:not(.loading) .play-icon-overlay {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.15);
+    background-color: var(--PEACH);
 }
 
 .quick-add-btn {
@@ -1394,14 +1446,15 @@ img {
 
 .modal-close {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 10px;
+    right: 10px;
     background: transparent;
     border: none;
     font-size: 28px;
     cursor: pointer;
     color: var(--text-main);
     transition: color 0.3s ease;
+    z-index: 10;
 }
 
 .modal-close:hover { color: var(--PEACH); }
@@ -1414,6 +1467,40 @@ img {
     overflow: hidden;
     background-color: var(--DIMPEACH);
     position: relative;
+}
+
+/* Remove fixed height so iframe doesn't clip */
+.modal-img-wrapper:has(iframe) {
+    height: auto;
+}
+
+.modal-img-wrapper iframe {
+    width: 100%;
+    min-height: 480px;
+    border: none;
+    border-radius: 8px;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.modal-img-wrapper iframe.loaded {
+    opacity: 1;
+}
+
+/* Centers the loading spinner specifically for the iframe */
+.iframe-spinner-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+@media (max-width: 768px) {
+    .modal-img-wrapper iframe {
+        min-height: 360px;
+    }
 }
 
 .modal-img {
