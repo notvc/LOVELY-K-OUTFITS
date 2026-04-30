@@ -170,22 +170,19 @@ function updateCart() {
     
     if (cart.length === 0) {
         cartItemsContainer.innerHTML = '<p class="empty-cart">Your cart is empty</p>';
-        cartTotalDisplay.textContent = '₦0';
+        if (cartTotalDisplay) cartTotalDisplay.closest('.cart-total').style.display = 'none';
         return;
     }
     
-    let total = 0;
+    if (cartTotalDisplay) cartTotalDisplay.closest('.cart-total').style.display = 'none';
     
     cart.forEach((item, index) => {
         const itemElement = document.createElement('div');
         itemElement.className = 'cart-item';
-        const itemTotal = item.price * item.quantity;
-        total += itemTotal;
         
         itemElement.innerHTML = `
             <div class="cart-item-details">
                 <h5>${escapeHTML(item.name)}</h5>
-                <p>₦${item.price} x ${item.quantity}</p>
             </div>
             <div class="cart-item-actions">
                 <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
@@ -196,9 +193,6 @@ function updateCart() {
         `;
         cartItemsContainer.appendChild(itemElement);
     });
-    
-    // Update total
-    cartTotalDisplay.textContent = `₦${total.toLocaleString()}`;
 }
 
 // Update quantity
@@ -286,18 +280,14 @@ function showCheckoutModal() {
     message += "Hello! I am interested in the following items and would like to talk more about them here:\n\n";
     
     cart.forEach(item => {
-        const subtotal = item.price * item.quantity;
         message += `📍 *${item.name}*\n`;
-        message += `   Quantity: ${item.quantity} | Price: ₦${item.price.toLocaleString()}\n`;
-        message += `   Subtotal: ₦${subtotal.toLocaleString()}\n`;
+        message += `   Quantity: ${item.quantity}\n`;
         if (item.instagram_url) message += `   Instagram Link: ${item.instagram_url}\n`;
         message += `\n`;
     });
     
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     message += `-----------------------------------\n`;
-    message += `💰 *TOTAL ESTIMATE: ₦${total.toLocaleString()}*\n\n`;
-    message += `👤 *Customer Name:* ${name}\n`;
+    message += ` *Customer Name:* ${name}\n`;
     message += `🚚 *Delivery Address:* ${address}\n`;
     if (phone) message += `📞 *Alternate Phone:* ${phone}\n\n`;
     else message += `\n`;
@@ -424,6 +414,15 @@ function getInitialItemCount() {
 let itemsToShow = getInitialItemCount();
 let allItemsShown = false;
 
+// Helper for category matching to support multiple categories per product
+function matchesCategory(productCategory, targetCategory) {
+    if (!productCategory) return false;
+    if (Array.isArray(productCategory)) {
+        return productCategory.some(c => c.toLowerCase() === targetCategory.toLowerCase());
+    }
+    return productCategory.toString().toLowerCase().split(',').map(c => c.trim()).includes(targetCategory.toLowerCase());
+}
+
 // Function to render products
 function renderProducts(sourceList, count, isSearch = false, searchTerm = "") {
     productContainer.innerHTML = '';
@@ -439,32 +438,31 @@ function renderProducts(sourceList, count, isSearch = false, searchTerm = "") {
     sourceList.slice(0, count).forEach((product, index) => {
         const card = document.createElement('div');
         card.classList.add('product-card');
-        card.setAttribute('data-category', product.category || 'all');
+        const categoryAttr = Array.isArray(product.category) ? product.category.join(',') : (product.category || 'all');
+        card.setAttribute('data-category', categoryAttr);
         card.style.cursor = 'pointer';
 
         const escapedName = escapeHTML(product.name || 'Unnamed Product');
         const safeImg = product.img || ''; // Prevent null reference errors
-        const srcsetImg = safeImg ? safeImg.replace('.jpg', '-2x.jpg').replace('.png', '-2x.png') : '';
 
         const playIconHtml = product.instagram_url ? `<div class="play-icon-overlay"><i class="fa-solid fa-play"></i></div>` : '';
 
         card.innerHTML = `
             <div class="product-image loading">
-                <img src="${escapeHTML(safeImg)}" srcset="${escapeHTML(safeImg)} 1x, ${escapeHTML(srcsetImg)} 2x" alt="${escapedName}" loading="lazy">
+                <img src="${escapeHTML(safeImg)}" alt="${escapedName}" loading="lazy">
                 ${playIconHtml}
                 ${product.badge ? `<span class="badge">${escapeHTML(product.badge)}</span>` : ''}
             </div>
             <div class="product-info">
                 <h4 class="product-title-display"></h4>
-                <p class="price">${escapeHTML(product.price)}</p>
+                <button class="price-btn">Contact for Price</button>
             </div>
-            <button class="quick-add-btn">ADD TO CART</button>
         `;
         
-        const quickAddBtn = card.querySelector('.quick-add-btn');
-        quickAddBtn.addEventListener('click', (e) => {
+        const priceBtn = card.querySelector('.price-btn');
+        priceBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            addToCart(product);
+            showPriceExplanationModal(product);
         });
 
         const titleElement = card.querySelector('.product-title-display');
@@ -507,6 +505,7 @@ function renderProducts(sourceList, count, isSearch = false, searchTerm = "") {
             // Failsafe: if the image is blocked or broken, show the placeholder
             img.addEventListener('error', () => {
                 img.src = 'https://via.placeholder.com/400x533/FBE4D8/54162B?text=LOVELY+K';
+            img.removeAttribute('srcset');
                 img.classList.add('loaded');
                 container.classList.remove('loading');
             });
@@ -640,7 +639,7 @@ categoryCards.forEach(card => {
                             window.currentPageProducts = products;
                             renderProducts(window.currentPageProducts, itemsToShow);
                         } else {
-                            const filtered = products.filter(p => p.category === category);
+                            const filtered = products.filter(p => matchesCategory(p.category, category));
                             window.currentPageProducts = filtered;
                             itemsToShow = getInitialItemCount();
                             renderProducts(filtered, itemsToShow);
@@ -709,7 +708,7 @@ async function initProducts() {
     else if (currentPath.includes('accessories.html') || currentPath.includes('accesories.html')) pageCategory = 'accessories';
 
     if (pageCategory) {
-        window.currentPageProducts = products.filter(p => p.category === pageCategory);
+        window.currentPageProducts = products.filter(p => matchesCategory(p.category, pageCategory));
         itemsToShow = getInitialItemCount();
         renderProducts(window.currentPageProducts, itemsToShow);
     } else {
@@ -778,11 +777,14 @@ if (searchInput) {
         const header = document.querySelector('.product-header h2');
         
         // Filter products: Only show items matching the specific keyword in name, description, or category
-        const filteredProducts = window.currentPageProducts.filter(product => 
-            product.name.toLowerCase().includes(searchTerm) || 
-            product.description.toLowerCase().includes(searchTerm) ||
-            product.category.toLowerCase().includes(searchTerm)
-        );
+        const filteredProducts = window.currentPageProducts.filter(product => {
+            const catStr = Array.isArray(product.category) ? product.category.join(', ') : (product.category || '');
+            const descStr = product.description || '';
+            const nameStr = product.name || '';
+            return nameStr.toLowerCase().includes(searchTerm) || 
+                   descStr.toLowerCase().includes(searchTerm) ||
+                   catStr.toLowerCase().includes(searchTerm);
+        });
 
         if (searchTerm === "") {
             if (header) header.textContent = "FEATURED COLLECTION";
@@ -1107,7 +1109,6 @@ function openProductModal(product) {
     if (!hasIgEmbed) {
         const img = document.createElement('img');
         img.src = product.img || 'https://via.placeholder.com/400x533/FBE4D8/54162B?text=LOVELY+K';
-        img.srcset = product.img ? `${product.img} 1x, ${product.img.replace('.jpg', '-2x.jpg').replace('.png', '-2x.png')} 2x` : '';
         img.alt = product.name;
         img.className = 'modal-img';
 
@@ -1120,6 +1121,12 @@ function openProductModal(product) {
                 img.classList.add('loaded');
                 imgWrapper.classList.remove('loading');
             });
+            
+            img.addEventListener('error', () => {
+                img.src = 'https://via.placeholder.com/400x533/FBE4D8/54162B?text=LOVELY+K';
+                img.classList.add('loaded');
+                imgWrapper.classList.remove('loading');
+            });
         }
         imgWrapper.appendChild(img);
     }
@@ -1128,9 +1135,13 @@ function openProductModal(product) {
     title.textContent = product.name;
     title.className = 'modal-title';
 
-    const price = document.createElement('p');
-    price.textContent = product.price;
-    price.className = 'modal-price';
+    const price = document.createElement('button');
+    price.textContent = 'Contact for Price';
+    price.className = 'modal-price-btn';
+    price.onclick = (e) => {
+        e.stopPropagation();
+        showPriceExplanationModal(product);
+    };
 
     const description = document.createElement('p');
     description.textContent = product.description;
@@ -1369,6 +1380,52 @@ function showInfoModal(title, message) {
     modal.querySelector('.modal-close').onclick = closeModal;
     modal.querySelector('.ok-btn').onclick = closeModal;
     modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+}
+
+function showPriceExplanationModal(product) {
+    const modal = document.createElement('div');
+    modal.className = 'product-modal-overlay';
+    modal.style.opacity = '0';
+    modal.style.transition = 'opacity 0.35s ease-out';
+    modal.style.zIndex = '9999';
+    
+    modal.innerHTML = `
+        <div class="product-modal-content" style="text-align: center; transform: scale(0.92); transition: transform 0.35s ease-out;">
+            <button class="modal-close">✕</button>
+            <div style="font-size: 3rem; color: var(--PEACH); margin-bottom: 20px;">
+                <i class="fa-solid fa-tags"></i>
+            </div>
+            <h2 class="modal-title">PRICE INQUIRY</h2>
+            <p class="modal-description">Due to fluctuating currency rates, our prices are currently discussed directly on WhatsApp. Add this item to your cart and proceed to checkout to request the exact current price and finalize your order!</p>
+            <button class="checkout-btn modal-add-cart-btn">ADD TO CART</button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    modal.offsetHeight;
+    modal.style.opacity = '1';
+    modal.querySelector('.product-modal-content').style.transform = 'scale(1)';
+    
+    const closeModal = () => {
+        modal.style.opacity = '0';
+        modal.querySelector('.product-modal-content').style.transform = 'scale(0.92)';
+        setTimeout(() => modal.remove(), 350);
+    };
+    modal.querySelector('.modal-close').onclick = closeModal;
+    modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+    modal.querySelector('.modal-add-cart-btn').onclick = () => {
+        addToCart(product);
+        closeModal();
+        // Auto-close the background quick view modal if it is open
+        const quickViewModal = document.getElementById('product-modal');
+        if (quickViewModal) {
+            quickViewModal.style.opacity = '0';
+            setTimeout(() => quickViewModal.remove(), 350);
+        }
+        // Pop open the cart dropdown to streamline checkout
+        cartDropdown.style.display = 'flex';
+        cartDropdown.offsetHeight;
+        cartDropdown.classList.add('open');
+    };
 }
 
 // 8. CHARACTER COUNTER FOR MESSAGE

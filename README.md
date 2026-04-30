@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="https://via.placeholder.com/1000x300/FBE4D8/54162B?text=LOVELY+K+OUTFITS+%26+HAIR+BOUTIQUE" alt="Lovely K Banner" style="border-radius: 12px; margin-bottom: 20px;"/>
+  <img src="https://via.placeholder.com/1000x300/FBE4D8/54162B?text=LOVELY+K+OUTFITS" alt="Lovely K Banner" style="border-radius: 12px; margin-bottom: 20px;"/>
 
-  <h1>🛍️ Lovely K Outfits & Hair</h1>
+  <h1>🛍️ Lovely K Outfits</h1>
   <p><i>A premium fashion, accessories, and luxury hair e-commerce boutique built with a modern Vanilla stack.</i></p>
 
   <p>
@@ -28,7 +28,7 @@
 
 ## 🌟 Project Overview
 
-**Lovely K Outfits & Hair** is a fully functional, high-performance e-commerce web application. Built entirely without heavy frontend frameworks (No React/Vue), it relies on modern CSS and pure Vanilla JavaScript to deliver a highly interactive, beautifully animated user experience. 
+**Lovely K Outfits** is a fully functional, high-performance e-commerce web application. Built entirely without heavy frontend frameworks (No React/Vue), it relies on modern CSS and pure Vanilla JavaScript to deliver a highly interactive, beautifully animated user experience. 
 
 It features a cross-device responsive design, an intuitive state-managed shopping cart, seamless dark/light mode, dynamic search filtering, and a direct-to-WhatsApp checkout system tailored for personalized boutique-style customer interactions.
 
@@ -167,5 +167,5 @@ Currently, this project uses hardcoded constants. For a production-ready setup, 
 ---
 
 **Last Updated:** April 2026  
-**Developed by:** NOTVC | LOVELY K OUTFITS & HAIR  
+**Developed by:** NOTVC | LOVELY K OUTFITS  
 **License:** All rights reserved.

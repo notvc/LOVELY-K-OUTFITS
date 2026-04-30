@@ -901,9 +901,23 @@ img {
     word-break: break-word;
 }
 
-.product-info .price {
-    font-weight: 600;
+.product-info .price-btn {
+    background-color: transparent;
     color: var(--PEACH);
+    border: 1px solid var(--PEACH);
+    padding: 6px 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 5px;
+}
+
+.product-info .price-btn:hover {
+    background-color: var(--PEACH);
+    color: var(--DARKRED);
 }
 
 /* Hover Effects */
@@ -920,29 +934,6 @@ img {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1.15);
     background-color: var(--PEACH);
-}
-
-.quick-add-btn {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: var(--PEACH);
-    color: white;
-    border: none;
-    padding: 15px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transform: translateY(100%);
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 10;
-}
-
-.product-card:hover .quick-add-btn {
-    transform: translateY(0);
 }
 
 /* Full-width Section Safety */
@@ -1523,11 +1514,24 @@ img {
     letter-spacing: 2px;
 }
 
-.modal-price {
-    font-size: 1.4rem;
-    font-weight: 700;
+.modal-price-btn {
+    background-color: transparent;
     color: var(--PEACH);
+    border: 2px solid var(--PEACH);
+    padding: 8px 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
     margin-bottom: 20px;
+    display: inline-block;
+}
+
+.modal-price-btn:hover {
+    background-color: var(--PEACH);
+    color: var(--DARKRED);
 }
 
 .modal-description {
